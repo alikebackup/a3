@@ -19,7 +19,7 @@ $reservedSrId = "a2a2a2a2-a2a2-a2a2-a2a2-a2a2a2a2a2a2";
 $scratchDisk = "/dev/xvdc1";
 
 $myConf = "$nfsBase/sr.id";
-if(file_exists($myConf == false)) {
+if(!file_exists($myConf )) {
         gen_log(LOG_ERR, "$myConf does not exist!");
         exit(-1);
 }

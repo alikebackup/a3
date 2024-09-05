@@ -32,6 +32,10 @@ if($jobId != null){
 	$GLOBALS["__insta_job_id"] = $jobId;
 }
 
+if(!isADSMounted()){
+	die("ADS not mounted!\n");
+}
+
 $abdLockTimeout = 60;	// wait x seconds to get lock.  Lock can span provisioning of new ABD, so it can take a while
 
 // NB- exiting with anything but a 0 will mark the job as a failure by jobRunner

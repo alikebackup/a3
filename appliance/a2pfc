@@ -71,17 +71,6 @@ if($mode == "post"){
 	findAndUnpauseABDs();
 }
 
-function setInstallID(){
-	$idf = "/home/alike/Alike/inst.id";
-	if(!file_exists($idf)){
-		$id = makeGuid();
-		file_put_contents($idf,$id);
-		file_put_contents("/mnt/ads/guid.id",$id);
-		setSetting("installID", $id);
-	}
-	return getSetting("installID");
-}
-
 
 function setupABDs(){
 	$hids = getPoolMasters();

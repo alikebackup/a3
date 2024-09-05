@@ -1797,7 +1797,11 @@ function gen_log($lvl, $msg) {
         }
 
         if(!isset($GLOBALS['debugLevel'])){
-                $GLOBALS['debugLevel'] = getSetting("debugLevel");  // be kind to our db only only hit this once per execution
+		if(isADSMounted()){
+			$GLOBALS['debugLevel'] = getSetting("debugLevel");  // be kind to our db only only hit this once per execution
+		}else{
+			$GLOBALS['debugLevel'] = 7;	// we can't access our dbs if the ads isn't mounted
+		}
         }
         if ($lvl > $GLOBALS['debugLevel']){  return; }
 
