@@ -69,7 +69,7 @@ fi
 sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config; 
 systemctl restart ssh 
 echo "Checking out Alike project"
-git clone https://github.com/vtgreybeard/a3.git /root/a3; 
+git clone https://github.com/alikebackup/a3.git /root/a3; 
 chmod +x /root/a3/build/install.sh; 
 echo "Installing Alike software"
 cd /root/a3/build/ && ./install.sh -s; 
