@@ -1,4 +1,4 @@
-# alike
+# Alike Backup
 
 This is is an attempt to reforge the final Alike Backup (A3) into the newer, unreleased Alike v7.5.  
 The Alike software is now completely open-sourced, and this project intends to carry the project forward.  Older A3 installs should be completely compatible, and existing ADS datastores can be imported.
