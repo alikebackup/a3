@@ -22,8 +22,10 @@ apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 
 cat << EOF > /etc/motd
 ==============================================================
-| Welcome to the A3
+| Welcome to the A3!
 | For help and documentation, please refer to alikebackup.com
+|
+| Note: type "menu" for the A3 console menu
 ==============================================================
 
 EOF

@@ -940,6 +940,24 @@ function getPassword() {
       ;
 }
 
+function updateLocalUsers(){
+        $pass = getSetting("uiPass");
+        updateSMBUser("alike", $pass);
+        $pass = getSetting("dataStorePass");
+        updateSMBUser("ads", $pass);
+}
+
+function updateUser($user, $pass){
+        $pass = addslashes($pass);
+        $cmd = sprintf("echo '%s:%s' | /usr/sbin/chpasswd", $user, $pass);
+        exec($cmd);
+}
+function updateSMBUser($user, $pass){
+        $pass = addslashes($pass);
+        $cmd = sprintf("echo '%s\n%s\n%s' | smbpasswd -s -a %s", $pass, $pass, $pass, $user);
+        exec($cmd);
+}
+
 
 function updateNimbusADS($user, $pass ){
 	$sql = "REPLACE into settings (name,val) VALUES(?,?)";

@@ -1,6 +1,7 @@
 #!/usr/bin/php -q
 <?php
 include_once("common_lib");
+include_once("shared_lib");
 
 echo "Starting A3 Node\n";
 
@@ -47,6 +48,7 @@ if(!file_exists($idf)){
 	setSetting("installID", $id);
 }
 
+makeInstaConfigs();
 
 echo "Starting Alike services...";
 exec("/usr/local/sbin/startEngine");

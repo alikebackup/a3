@@ -120,6 +120,7 @@ fi
 # Now move onto the Alike software 
 cp ../configs/nginx.conf.etc /etc/nginx/nginx.conf
 cp ../configs/smb.conf /etc/samba/smb.conf
+cp ../configs/rsyslog.conf /etc/
 cp ../configs/a3.logrotate /etc/logrotate.d/a3.engine
 
 PHP_VERSION=$(php -r "echo PHP_VERSION;")

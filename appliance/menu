@@ -108,10 +108,10 @@ function processMainChoice($resp){
 
 function doViewLogs(){
         echo "\nView System Logs:\n";
-        echo opt(1)." View console log file (Docker)\n";
-        echo opt(2)." View A3 log\n";
-        echo opt(3)." View Engine log\n";
-        echo opt(4)." View Syslog \n";
+        echo opt(1)." View A3 log\n";
+        echo opt(2)." View Engine log\n";
+        echo opt(3)." View Syslog \n";
+        echo opt(4)." View kernel log (dmesg)\n";
         echo opt(0)." Return to Main Menu\n";
 
         $resp = getChoice();
@@ -119,13 +119,13 @@ function doViewLogs(){
                 $GLOBALS["msg"]="";
         }else{
                 if ($resp == "1"){
-                        return doViewLogFile("docker");
-                }else if ($resp == "2"){
                         return doViewLogFile("a3");
-                }else if ($resp == "3"){
+                }else if ($resp == "2"){
                         return doViewLogFile("engine");
-                }else if ($resp == "4"){
+                }else if ($resp == "3"){
                         return doViewLogFile("syslog");
+                }else if ($resp == "4"){
+                        return doViewDmesg();
                 }else if ($resp == "0"){
                         return mainMenu();
                 }else{
@@ -149,15 +149,7 @@ function doAdvanced(){
 	        echo opt(2)." Create Support Archive\n";
 	}
 	$ms = getModeStr($mode);
-//        echo opt(4)." Change Local Node Mode [$ms]\n";
-//	if($mode == 1){
-//	        if(!file_exists( "/mnt/ads/prodDBs/nimbusdb.db" )){ echo "*** No ADS/DBs found-- cannot see/set Manager Token.\n"; }
-//		else{
-//			$tok = getSetting("a3ManagerPass");
-//			$tok = "\033[1;33m$tok\033[0m";
-//		        echo opt(5)." Regenerate Manager Token [current: $tok]\n";
-//		}
-//	}
+	echo opt(3)." Run ABD Report\n";
         echo opt(0)." Return to Main Menu\n";
 
 	$resp = getChoice();
@@ -168,6 +160,8 @@ function doAdvanced(){
 			return doLocalAuth();
 		}else if ($resp == "2"){
 			return doSupportTar();
+		}else if ($resp == "3"){
+			return doAbdReport();
 		}else if ($resp == "4"){
 			return doModeChange();
 		}else if ($resp == "5"){
@@ -289,28 +283,40 @@ function doSupportTar(){
 	trim(fgets(STDIN));
 }
 
+function doAbdReport(){
+	if(!isADSMounted()){
+		echo "ADS is not mounted!  Report not available.\n";
+		readline("Press any key to continue.");
+		return;
+	}
+	exec("sudo abdAdmin report", $out, $code);	
+	foreach($out as $l){
+		echo "$l\n";
+	}
+	echo "Press any key to continue\n";
+	trim(fgets(STDIN));
+}
 function doLocalAuth(){
-	echo "\nSet Local Login for Alike UI\n";
-	if(!file_exists("/mnt/ads/a3.lic.enc")){
-		echo "\nPlease note- This is only for use when the A3 cannot reach the internet.\n";
-		echo "The user/password will ONLY BE VALID FOR ONE LOGIN.\n\n";
+	echo "\nSet Local Login Password for Alike user.\n";
+	echo "This will change the password for the UI, ssh, and CIFS\n";
+	if(!isADSMounted()){
+		echo "ADS is not mounted!  Cannot access dbs.\n";
+		readline("Press any key to continue.");
+		return;
 	}
-	echo "Please enter your username:\n";
-	$user = getEntry();
-	while (empty($user) ){
-		echo "\nSorry, please enter a valid username\n";
-		$user = getEntry();
-	}
-	echo "Please enter your Password:\n";
+
+	echo "Please enter your new Password:\n";
 	$pass = getPasswordStr();
-	while (strpos($pass, ',') !== false || empty($pass)){
-		echo "\nInvalid password! Empty passwords and commas are not allowed.\n";
+	while ( empty($pass)){
+		echo "\nInvalid password! Empty passwords are not allowed.\n";
 		echo "Please re-enter password:\n";
 		$pass = getPasswordStr();
 	}
 	echo "\nProceed?\n";
 	if(getYN() ){
-		exec("echo \"$user,$pass\" > /mnt/ads/a3.local.auth");
+		setSetting("uiPass", $pass);
+		updateUser("alike", $pass);
+		updateSMBUser("alike", $pass);
 		echo "\nLocal authentication set.\nPress any key to continue.";
 		trim(fgets(STDIN));
 	}
@@ -408,14 +414,14 @@ function adsTools(){
 
 	echo "Tools to repair/recover ADS Databases\n";
 	echo opt(1)." Attempt DB Repair\n";
-	echo opt(2)." Attempt complete NimbusDB Recovery\n";
+//	echo opt(2)." Attempt complete NimbusDB Recovery\n";
 	echo opt(0)." Return to previous menu\n";
         $resp = getChoice();
         while($resp =="" || !is_numeric($resp)){
 		echo "Invalid choice ($resp)\n";
 	        $resp = getChoice();
         }
-	if ($resp ==3){
+	if ($resp ==0){
 		return manageStorage();
 	}
 	if(getSvcStatus() ){
@@ -433,6 +439,11 @@ function adsTools(){
 }
 
 function repairDbMenu(){
+	if(!isADSMounted()){
+		echo "ADS is not mounted!  Cannot access dbs.\n";
+		readline("Press any key to continue.");
+		return;
+	}
 	echo "\nAttempt to repair a malformed DB\n";
 	echo "Please choose your DB:\n";
 	echo opt(1)." NimbusDB\n";
@@ -523,7 +534,8 @@ function configDS($dsType){
 	                echo opt(3)." Use S3 (or S3-compatible)\n";
 		}
 		if ($cur->path != ""){
-			echo opt(4)." Create Blank $dsType at existing path [warning]\n";
+			$free = trim(shell_exec("df -h /mnt/ads | grep -v Filesystem | awk {'print $4'}"));
+			echo opt(4)." Create $dsType at existing path [$free Free] (Manual Storage Mount)\n";
 			echo opt('x') . " Forget/Detach $dsLabel\n";
 		}
 
@@ -551,8 +563,9 @@ function configDS($dsType){
 				readline( "Press any key to continue.\n");
 				return configDS($dsType);
 			}
-			echo "This will create a blank new ADS.\nIf any data exists in the /mnt/ads location, it will be lost.\n";
-			echo "Continue? (y/N) ";
+			echo "This will create a blank new ADS in the path: /mnt/ads.\n";
+			echo "It is assumed you have already mounted backup storage to this path!\n";
+			echo "If any data exists in the /mnt/ads location, it will be lost.\n\n";
 			$resp = getYN(true);
 			if(!$resp){ return configDS($dsType); }
 
@@ -571,11 +584,6 @@ function configDS($dsType){
 
 function handleNewDS($type){
 	$up = strtoupper($type);
-	if (file_exists("/mnt/$type/nods") ) {
-		echo "Warning!  $up (/mnt/$type) is not properly mounted!\n";
-		echo "Please check system logs and fix the mount error.\n";
-		return;
-	}
 
 	// we need to check the /mnt/Xds for an ads.dat file
 	if($type== "ads"){
@@ -628,7 +636,7 @@ function initDS($type){
 		exec("sudo chown -R alike:alike /mnt/ads");
 		$bs = 2;
 		echo "BlockSize: 2MB  Change? (y/N): ";
-		$resp = getYN(true);
+		$resp = getChoice(true);
 		if($resp){
 			echo "Enter your desired block-size in MB. [2, 4, 6, or 8]: ";
 			$resp = trim(fgets(STDIN));
@@ -945,6 +953,16 @@ function doRestart(){
 
 }
 
+function doViewDmesg(){
+        system('clear');
+	exec("sudo dmesg -T -l warn,err,crit,alert,emerg", $out, $code);
+	foreach($out as $l){
+		echo "$l\n";
+	}
+	echo "\nPress any key to return\n";
+	fgets(STDIN);
+	return;
+}
 function doViewLogFile($log){
         system('clear');
 	$logFile = '/home/alike/logs/a3.log';
@@ -954,7 +972,7 @@ function doViewLogFile($log){
 		$logFile = '/var/log/syslog';
 	}
 	echo "Displaying recent entries in: $logFile \n\033[1;33m[Press any key to exit]\033[0m\n";
-	$logLines = shell_exec("tail -10 $logFile");
+	$logLines = shell_exec("tail -20 $logFile");
 	echo $logLines;
 	if (empty($logLines)) {
 		echo "Failed to open the log file: $log";

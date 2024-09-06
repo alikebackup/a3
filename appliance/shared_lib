@@ -3570,5 +3570,25 @@ function makeMungeConf(){
         return "$ip:$port";
 }
 
+function makeInstaConfigs(){
+        $cnf ="/mnt/instaboot/sr.id";
+        if(!file_exists($cnf)){
+                $uuid = strtolower(getInstallID());
+                $name = "QS_Alike_SR";
+                echo "Restore SR config missing. Creating defaults\n";
+                $d = array();
+                $d["sr-uuid"] = $uuid;
+                $d["name"] = $name;
+                $s = file_put_contents($cnf, json_encode($d) );
+                // { "sr-uuid" = "uuid", name="" }
+
+        }else{
+                $d = json_decode(file_get_contents($cnf),true);
+                echo "Restore SR config found.\n";
+                echo "SR Name: ". $d["name"] ."\n";
+                echo "SR UUID: ". $d["sr-uuid"] ."\n";
+        }
+}
+
 
 ?>
