@@ -73,4 +73,3 @@ git clone https://github.com/alikebackup/a3.git /root/a3;
 chmod +x /root/a3/build/install.sh; 
 echo "Installing Alike software"
 cd /root/a3/build/ && ./install.sh -s; 
-
