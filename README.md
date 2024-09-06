@@ -3,6 +3,10 @@
 This is is an attempt to reforge the final Alike Backup (A3) into the newer, unreleased Alike v7.5.  
 The Alike software is now completely open-sourced, and this project intends to carry the project forward.  Older A3 installs should be completely compatible, and existing ADS datastores can be imported.
 
+
+![Alike dashboard](https://www.alikebackup.com/images/a3-jobhist.png "Alike Dashboard Screenshot")
+
+
 # Quick Start #
 Please use our bootable [ISO installer](https://github.com/alikebackup/a3/raw/main/a3_install.iso) to create your A3.  For a USB installer, you can use [Rufus](https://rufus.ie/en/), [Etcher](https://etcher.balena.io/), or similar tools.
 
