@@ -171,6 +171,7 @@ function getADSInfo(){
 	$ads->type = 0;
 
 	$path = "/mnt/ads";
+	$ads->path = trim(shell_exec("df -B1 /mnt/ads | awk 'NR==2 {print $1}'"));
 	$ads->total = trim(shell_exec("df -B1 $path | awk 'NR==2 {print $2}'"));
 	$ads->free = trim(shell_exec("df -B1 $path | awk 'NR==2 {print $4}'"));
 

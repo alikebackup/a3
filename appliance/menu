@@ -39,8 +39,8 @@ function mainMenu(){
 		if(!haveADS() ){
 		        echo "\033[1;33mNO ADS Detected!\033[0m\n";
 		}else{
-			$inf = getA3Info();
-		        echo "A3 Guid: \033[1;34m$inf->guid\033[0m\n";
+			$inf = getADSInfo();
+		        echo "ADS Detected: \033[1;34m$inf->path\033[0m [".bytesToString($inf->free)." Free]\n";
 		}
 	}
 
@@ -535,7 +535,7 @@ function configDS($dsType){
 		}
 		if ($cur->path != ""){
 			$free = trim(shell_exec("df -h /mnt/ads | grep -v Filesystem | awk {'print $4'}"));
-			echo opt(4)." Create $dsType at existing path [$free Free] (Manual Storage Mount)\n";
+			echo opt(4)." Create $dsType at path (/mnt/ads) [$free Free] (Manual Storage Mount)\n";
 			echo opt('x') . " Forget/Detach $dsLabel\n";
 		}
 
@@ -566,7 +566,8 @@ function configDS($dsType){
 			echo "This will create a blank new ADS in the path: /mnt/ads.\n";
 			echo "It is assumed you have already mounted backup storage to this path!\n";
 			echo "If any data exists in the /mnt/ads location, it will be lost.\n\n";
-			$resp = getYN();
+			echo "Are you sure? (y/N): ";
+			$resp = getYN(false);
 			if(!$resp){ return configDS($dsType); }
 
 		}else if($resp == "x"){
@@ -591,6 +592,7 @@ function handleNewDS($type){
 			echo "This appears to be a new ADS.\n";
 			echo "Initializing new data-store.\n";
 			initDS($type);
+			return mainMenu();
 		}else{
 			$guid = "";
 			$gText ="";
@@ -624,6 +626,7 @@ function handleNewDS($type){
 			$resp = getYN(false);
 			if(!$resp){ return; }
 			initDS($type);
+			return mainMenu();
 		}else{
 			//echo "Found existing ODS\n";
 		}
@@ -636,7 +639,7 @@ function initDS($type){
 		exec("sudo chown -R alike:alike /mnt/ads");
 		$bs = 2;
 		echo "BlockSize: 2MB  Change? (y/N): ";
-		$resp = getChoice(true);
+		$resp = getYN(false);
 		if($resp){
 			echo "Enter your desired block-size in MB. [2, 4, 6, or 8]: ";
 			$resp = trim(fgets(STDIN));
@@ -649,8 +652,6 @@ function initDS($type){
 		}
 		echo "Building ADS, please wait...\n";
 		echo shell_exec("sudo dsCreator -t ads -s $bs");
-		echo "\nPress any key to continue";
-		fgets(STDIN);
 	}else{
 		exec("sudo chown -R alike:alike /mnt/ods1");
 		echo shell_exec("sudo dsCreator -t ods ");

@@ -37,7 +37,9 @@ function makeDS($type, $bsize){
 		throw new Exception("$type directory already exists ($dsBase/blocks)");
 	}
 
-	unlink("$dsBase/nods");
+	if(file_exists("$dsBase/nods")){
+		unlink("$dsBase/nods");
+	}
 
 	exec("mkdir -p $dsBase",$out, $code);
 	if($code != 0){

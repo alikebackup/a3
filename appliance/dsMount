@@ -24,6 +24,9 @@ if ($type != "ads" && $type !="ods"){
 if ($type == "ads"){
 
 	if(isADSMounted()){
+		if(file_exists("/home/alike/Alike/DBs/nimbusdb.db")){
+			loadADS();
+		}
 		echo "dsMount ads called but ADS is already mounted.\n";
 		exit(0);
 	}
