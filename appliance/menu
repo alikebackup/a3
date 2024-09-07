@@ -1017,10 +1017,10 @@ function getNewItems($array, $search) {
 function getCurrentBuild(){
         $bld = "N/A";
 
-	$bf = "/home/alike/Alike/alike.bld.nfo";
+	$bf = "/home/alike/Alike/build.num";
 	if(file_exists($bf)){
-		$inf = json_decode(file_get_contents("/home/alike/Alike/alike.bld.nfo"));
-		return $inf->alikeBuild;
+		$inf = trim(file_get_contents($bf));
+		return $inf;
 	}
         return $bld;
 }

@@ -18,13 +18,12 @@ function usage(){
 
 
 function updateToTag($tag){
-	exec("cd /root/a3");
-	exec("git fetch --tags");
-	exec("git rev-parse --verify refs/tags/$tag", $out, $code);
+	exec("git -C /root/a3 fetch --tags");
+	exec("git -C /root/a3 rev-parse --verify refs/tags/$tag", $out, $code);
 	if($code !== 0){
 		die("Tag ($tag) not found!\n");
 	}
-	exec("git checkout tags/$tag", $out, $code);
+	exec("git -C /root/a3 checkout tags/$tag", $out, $code);
 	if($code !== 0){
 		echo "Failed to checkout $tag\n";
 		foreach($out as $l){
