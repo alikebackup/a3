@@ -978,8 +978,10 @@ function setABDImage($uuid, $poolID, $srID, $version){
 }
 
 // menu stuff
-function getYN(){
-        echo "Continue? (y/N): ";
+function getYN($ask = true){
+	if($ask){
+		echo "Continue? (y/N): ";
+	}
         $resp = trim(fgets(STDIN));
         if (strcasecmp($resp, "y") == 0) { return true; }
         return false;

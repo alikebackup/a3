@@ -313,7 +313,7 @@ function doLocalAuth(){
 		$pass = getPasswordStr();
 	}
 	echo "\nProceed?\n";
-	if(getYN() ){
+	if(getYN(false) ){
 		setSetting("uiPass", $pass);
 		updateUser("alike", $pass);
 		updateSMBUser("alike", $pass);
@@ -566,7 +566,7 @@ function configDS($dsType){
 			echo "This will create a blank new ADS in the path: /mnt/ads.\n";
 			echo "It is assumed you have already mounted backup storage to this path!\n";
 			echo "If any data exists in the /mnt/ads location, it will be lost.\n\n";
-			$resp = getYN(true);
+			$resp = getYN();
 			if(!$resp){ return configDS($dsType); }
 
 		}else if($resp == "x"){
@@ -621,7 +621,7 @@ function handleNewDS($type){
 		if(!haveODS()){
 			echo "This appears to be a new ODS.\n";
 			echo "Would you like to initialize the default structure? [Required if new] (y/n): ";
-			$resp = getYN(true);
+			$resp = getYN(false);
 			if(!$resp){ return; }
 			initDS($type);
 		}else{
@@ -745,7 +745,7 @@ function setupNFS($type){
         if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false){
                 echo "Invalid IP: $ip\n";
                 echo "Try again (y/n)\n";
-                if(!getYN() ){ return configDS($type); }
+                if(!getYN(false) ){ return configDS($type); }
                 else{ return setupNFS($type); }
         }
 	$vers =3;
@@ -824,7 +824,7 @@ function setupNFS($type){
         echo "You said: $fullPath\n";
         if(!is_dir($lclTmp)){
                 echo "Path does not exist: $fullPath\nCreate folder now? (y/n) ";
-                if(!getYN(true) ){
+                if(!getYN(false) ){
                         exec( "sudo umount /home/alike/mnt-tmp");
                         return configDS($type);
                 }
@@ -896,14 +896,11 @@ function forgetDS($type){
 }
 
 function getUpdate(){
-	getLatestBuildNum(true);
-
 	echo "Checking for updates, please wait...\n";
-
-        $local = trim(file_get_contents("/usr/local/sbin/rev.num"));
-        $latest = trim(shell_exec("/usr/bin/curl --silent https://raw.githubusercontent.com/quadricsoftware/alike/main/host/a3.rev.num"));
+	$latest = getLatestBuildNum(true);
+        $local = trim(file_get_contents("/home/alike/Alike/build.num"));
 	if($latest > $local){
-		echo "A new update is available for the host environment (non Alike software)\n";
+		echo "A new update is available.\nCurrent: $local\nLatest: $latest\n";
 		echo "This update will require a reboot.";
 		if(getSvcStatus() ){
 			echo "\n\033[1;33mAlike is Running! \033[0m \n";
@@ -913,31 +910,13 @@ function getUpdate(){
 		}
 		echo "Proceed? (y/N) ";
 
-		if(getYN()){
-			exec("sudo /usr/local/sbin/update_a3.sh");
+		if(getYN(false)){
+			exec("sudo /usr/local/sbin/a3_update $latest");
 		}else{
-			echo "Host update skipped.\n";
+			echo "Update skipped.\n";
 		}
 	}else{
-		echo "Host scripts are up to date ($local)\n";
-	}
-
-
-	$res= shell_exec("sudo /usr/local/sbin/update-check.sh");
-	if( strpos($res,"Update available" ) !== false){
-		$update = true;
-		echo "Alike Software has an update!\n";
-		echo "\033[0;32mUpdates are available! \033[0m \n";
-		if(getSvcStatus() ){
-			echo "\033[1;33mAlike is Running! \033[0m \n";
-			echo "Please restart the Alike Services to apply updates.\n\n";
-			readline("Press any key to continue.");
-			return;
-		}
-		readline("Press any key to continue.");
-	}else{
-		echo "No software updates (Alike) are available.\nPress any key to return to menu\n";
-		fgets(STDIN);
+		echo "Already running latest version (#$local)\n";
 	}
 }
 

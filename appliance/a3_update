@@ -13,7 +13,7 @@ if( trim(exec("whoami")) !="root"){
 updateToTag($argv[1]);
 
 function usage(){
-        die("Please provide a tag (ie v1.0)\n");
+        die("Usage:\n\ta3_update [tag_num]\n\n");
 }
 
 
@@ -43,7 +43,7 @@ function updateAssets($tag){
 		unlink("$base/appliance/alike_crontab");
 	}
 	exec("cp -f $base/hooks/* /home/alike/Alike/hooks/");
-	exec("mv -r $base/binaries/BackupScheduler.exe /home/alike/Alike/");
+	exec("mv -f $base/binaries/BackupScheduler.exe /home/alike/Alike/");
 	exec("cp -f $base/appliance/* /usr/local/sbin/");
 	exec("cp -f $base/binaries/*.dll /usr/local/sbin/");
 	exec("cp -f $base/binaries/*.exe /usr/local/sbin/");
