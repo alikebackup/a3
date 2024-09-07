@@ -915,9 +915,11 @@ function getUpdate(){
 			exec("sudo /usr/local/sbin/a3_update $latest");
 		}else{
 			echo "Update skipped.\n";
+			readline("\nPress any key to continue.");
 		}
 	}else{
 		echo "Already running latest version (#$local)\n";
+		readline("\nPress any key to continue.");
 	}
 }
 
