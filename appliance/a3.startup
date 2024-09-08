@@ -36,6 +36,13 @@ popen("su - alike -c '/usr/local/sbin/gatherMetrics'", "r");
 popen("su - alike -c '/usr/local/sbin/managerTasks'", "r");
 echo " complete.\n";
 
+$idf = "/home/alike/Alike/inst.id";
+$instID = "";
+if(!file_exists($idf)){
+	$instID = makeGuid();
+	file_put_contents($idf,$instID);
+}
+
 //////////////////// Now the DS work. ////////////////
 
 echo "Attempting ADS mount\n";
@@ -46,12 +53,9 @@ if($res == 1){
 }
 exec("/usr/local/sbin/dsMount ods", $out, $res);
 
-$idf = "/home/alike/Alike/inst.id";
-if(!file_exists($idf)){
-	$id = makeGuid();
-	file_put_contents($idf,$id);
-	file_put_contents("/mnt/ads/guid.id",$id);
-	setSetting("installID", $id);
+if(!file_exists("/mnt/ads/guid.id")){
+	file_put_contents("/mnt/ads/guid.id",$instID);
+	setSetting("installID", $instID);
 }
 
 makeInstaConfigs();

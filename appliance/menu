@@ -503,7 +503,7 @@ function configDS($dsType){
 	// check
 	if($dsType == "ads" && haveADS()){
 		echo "Existing ADS already found.  Do you want to change your ADS?\n";
-		$resp = getChoice(); 
+		$resp = getYN(true); 
 		if($resp != "y"){ return; }
 	}
 
@@ -567,9 +567,10 @@ function configDS($dsType){
 				readline( "Press any key to continue.\n");
 				return configDS($dsType);
 			}
-			echo "This will create a blank new ADS in the path: /mnt/ads.\n";
+			$free = trim(shell_exec("df -h /mnt/ads | grep -v Filesystem | awk {'print $4'}"));
+			echo "This will create a blank new ADS in the path: /mnt/ads [$free Free].\n";
 			echo "It is assumed you have already mounted backup storage to this path!\n";
-			echo "If any data exists in the /mnt/ads location, it will be lost.\n\n";
+			echo "\033[1;33mAlike is Running! \033[0mIf any data exists in the /mnt/ads location, it will be lost.\033[0m \n\n";
 			echo "Are you sure? (y/N): ";
 			$resp = getYN(false);
 			if(!$resp){ return configDS($dsType); }
@@ -660,6 +661,7 @@ function initDS($type){
 		exec("sudo chown -R alike:alike /mnt/ods1");
 		echo shell_exec("sudo dsCreator -t ods ");
 	}
+	readline("Press any key to continue.");
 }
 
 function configNet(){

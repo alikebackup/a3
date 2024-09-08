@@ -82,17 +82,16 @@ function checkEnv(){
 	exec("chown alike:alike $dir"); 
 
 	$dir = "/mnt/restore";
-	if(!file_exists($dir)){ 
-		if(!mkdir($dir)){ myDie("Failed to create directory: $dir\n"); }
+	if(!is_dir($dir)){ 
+		try{
+			if(!mkdir($dir)){ throw new Exception("Failed to create directory: $dir"); }
+		}catch(Exception $ex){
+			exec("umount /mnt/restore");			
+		}
 	}
 	exec("chown -R alike:alike $dir"); 
 	exec("chmod 777 $dir");
 
-	$dir = "/mnt/Data_In";
-	if(!file_exists($dir)){ 
-		if(!mkdir($dir)){ myDie("Failed to create directory: $dir\n"); }
-	}
-	
 	$dir = $GLOBALS["jobPath"];
 	if(file_exists($dir)){
 		exec("rm -fr $dir/*");

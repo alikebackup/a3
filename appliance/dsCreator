@@ -52,6 +52,7 @@ function makeDS($type, $bsize){
 	$cmd = "mkdir -p $dsBase/blocks";
 	$res = shell_exec($cmd);
 
+	echo "Creating block structure\n";
 	for ($i = 0; $i < 4096; $i++) {
 		$dirName = "$dsBase/blocks/". sprintf('%03x', $i);
 		if (!is_dir($dirName)) {
