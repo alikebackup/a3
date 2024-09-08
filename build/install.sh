@@ -4,6 +4,11 @@ silent=false
 if [ "$1" = "-s" ]; then
     silent=true
 fi
+TAG=0
+if [ $# -eq 2 ]; then
+    TAG=$2
+fi
+
 set -e
 cd "$(dirname "$0")"
 
@@ -154,6 +159,8 @@ mkdir -p /mnt/ods1
 ln -sf /mnt/ods1 /mnt/ods
 touch /mnt/ads/nods
 touch /mnt/ods1/nods
+
+echo $TAG > /home/alike/Alike/build.num
 
 if [[ -f "/usr/local/sbin/goofys" ]]; then
 	wget https://github.com/kahing/goofys/releases/download/v0.24.0/goofys -O /usr/local/sbin/goofys

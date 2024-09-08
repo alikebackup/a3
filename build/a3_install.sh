@@ -68,8 +68,11 @@ fi
 
 sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config; 
 systemctl restart ssh 
-echo "Checking out Alike project"
-git clone https://github.com/alikebackup/a3.git /root/a3; 
+echo "Checking out the Alike project"
+REPO="https://github.com/alikebackup/a3.git"
+TAG=$(git ls-remote --tags --sort=-v:refname $REPO | grep -v '{}' | head -n 1 | sed 's/.*refs\/tags\///')
+echo "Getting the latest build (Tag: $TAG)"
+git clone -b $TAG --depth 1 $REPO /root/a3
 chmod +x /root/a3/build/install.sh; 
 echo "Installing Alike software"
-cd /root/a3/build/ && ./install.sh -s; 
+cd /root/a3/build/ && ./install.sh -s $TAG; 

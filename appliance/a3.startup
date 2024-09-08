@@ -21,10 +21,12 @@ exec("mkdir -p /mnt/hosts");
 exec("chmod 775 /mnt/vms");
 exec("chmod 775 /mnt/hosts");
 
-$build = "0000";
+$build = "0";
 $bn = "/home/alike/Alike/build.num";
 if(file_exists($bn)){
 	$build = trim(file_get_contents($bn));
+}else{
+	file_put_contents($bn,"0");
 }
 $vers =  "7.5.1";
 updateBuildInfo($build, $vers);

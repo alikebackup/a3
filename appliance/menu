@@ -913,10 +913,11 @@ function getUpdate(){
 			readline("\nPress any key to continue.");
 			return;
 		}
-		echo "Proceed? (y/N) ";
+		echo "\nProceed? (y/N) ";
 
 		if(getYN(false)){
 			exec("sudo /usr/local/sbin/a3_update $latest");
+			readline("\nPress any key to continue.");
 		}else{
 			echo "Update skipped.\n";
 			readline("\nPress any key to continue.");

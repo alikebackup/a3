@@ -272,6 +272,7 @@ function getLatestBuildNum($force=false){
 	if(file_exists($cache) && filemtime($cache) > (time() - 3600)  && $force==false){
 		return trim(file_get_contents($cache));
 	}
+	exec("sudo git -C /root/a3 fetch --tags");
 	$latest = trim(shell_exec("sudo git -C /root/a3 describe --tags `sudo git -C /root/a3 rev-list --tags --max-count=1`"));
 	file_put_contents($cache, $latest);
 	return $latest;
