@@ -108,6 +108,8 @@ function doNimbusImport(){
 
 	unset($db);
 
+	exec("touch /tmp/mdb.status");
+
 
 	syncSub();
 }

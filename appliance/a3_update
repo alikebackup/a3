@@ -33,6 +33,14 @@ function updateToTag($tag){
 	}
 
 	updateAssets($tag);
+	echo "Update to #$tag complete.\nA restart is required for all updates to take effect\nReboot now? (y/n): ";
+	$resp = getYN(false);
+	if($resp){
+		exec("sudo reboot");
+		exit(0);
+	}
+	echo "Reboot skipped.  Please restart as soon as you are able.\n";
+	
 }
 
 function updateAssets($tag){
@@ -41,6 +49,7 @@ function updateAssets($tag){
 		exec("crontab -u alike $base/appliance/alike_crontab");
 		unlink("$base/appliance/alike_crontab");
 	}
+	exec("cp -f $base/configs/rsyslog.conf /etc/");
 	exec("cp -f $base/hooks/* /home/alike/Alike/hooks/");
 	exec("mv -f $base/binaries/BackupScheduler.exe /home/alike/Alike/");
 	exec("cp -f $base/appliance/* /usr/local/sbin/");

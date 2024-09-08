@@ -15,8 +15,8 @@ if(amRoot()==false){
 
 try{
 
-	$doWS=true;
-	if(strpos(join(" ", $argv), "--no-web") !== false) { $doWS=false; }
+	$doWS=false;
+	if(strpos(join(" ", $argv), "--also-web") !== false) { $doWS=true; }
 
 	$res=0;
 

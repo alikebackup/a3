@@ -19,19 +19,19 @@ if($argc == 1) {
 	exit(0);
 }
 
-if(strpos(join($argv, " "), "--test") !== false) {
+if(strpos(join(" ", $argv), "--test") !== false) {
 	testWal($argv[2]);
 	exit(0);
 }
 
-if(strpos(join($argv, " "), "--actual") !== false) {
+if(strpos(join(" ", $argv), "--actual") !== false) {
 	applyAll();
 	exec("sync");
 	exit(0);
 }
 
 $BACKUP_MODE = false;
-if(strpos(join($argv, " "), "--backup") !== false) {
+if(strpos(join(" ",$argv), "--backup") !== false) {
 	$BACKUP_MODE = true;
 	applyAll();
 	exec("sync");
@@ -40,7 +40,7 @@ if(strpos(join($argv, " "), "--backup") !== false) {
 
 
 // Applies all dbs, but coalesces db sync requests together to prevent spamming
-if(strpos(join($argv, " "), "-a") !== false) {
+if(strpos(join(" ",$argv), "-a") !== false) {
 	
 	$fn = "/tmp/wal_coalesce";
 	$fp = @fopen($fn, "w");
@@ -82,7 +82,7 @@ if(strpos(join($argv, " "), "-a") !== false) {
 		
 }
 
-if(strpos(join($argv, " "), "--unsafe") !== false) {
+if(strpos(join(" ",$argv), "--unsafe") !== false) {
 	$GLOBALS["unsafe"]=true;
 	if(onlyOneProcess()) {
 		applyAll();
@@ -164,7 +164,7 @@ function saneExec($db, $statement) {
 
 function applyWal($dbFile){
 	global $BACKUP_MODE;
-	$destDbPath = "/home/alike/Alike/ADS/prodDBs/" . basename($dbFile);
+	$destDbPath = "/mnt/ads/prodDBs/" . basename($dbFile);
 	if($BACKUP_MODE) {
 		$destDbPath = "/home/alike/Alike/remoteDBs/" . basename($dbFile);
 	}

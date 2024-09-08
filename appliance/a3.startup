@@ -62,9 +62,18 @@ echo "Listening for events.\n";
 echo "Starting job schedules\n";
 exec("echo 1 > /tmp/sched_svc_status");
 
-echo "A3 Node startup complete.\n";
+set_time_limit(0);
+register_shutdown_function('delayedRun');
 
+syslog(LOG_INFO,"a3.startup script completed.");
 exit(0);
+
+function delayedRun() {
+        sleep(20);
+        $cmd ="/usr/local/sbin/blkfs -o nonempty -oallow_other -osync_read /mnt/restore";
+        $res = shell_exec($cmd);
+        syslog(LOG_INFO,"Mounted RestoreFS ($cmd) with res: $res");
+}
 
 function runAndTail($cmd){
     $desc = array(

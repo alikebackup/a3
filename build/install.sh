@@ -118,10 +118,10 @@ if [ "$silent" = false ]; then
 fi
 
 # Now move onto the Alike software 
-cp ../configs/nginx.conf.etc /etc/nginx/nginx.conf
-cp ../configs/smb.conf /etc/samba/smb.conf
-cp ../configs/rsyslog.conf /etc/
-cp ../configs/a3.logrotate /etc/logrotate.d/a3.engine
+cp -f ../configs/nginx.conf.etc /etc/nginx/nginx.conf
+cp -f ../configs/smb.conf /etc/samba/smb.conf
+cp -f ../configs/rsyslog.conf /etc/
+cp -f ../configs/a3.logrotate /etc/logrotate.d/a3.engine
 
 PHP_VERSION=$(php -r "echo PHP_VERSION;")
 PHP_DIR="/etc/php/${PHP_VERSION%.*}/"

@@ -17,42 +17,48 @@ $pid = pcntl_fork();
 if($pid) { exit(0); }
 
 
-$jobPollSec = getSettingMgr("jobPollSec");
-$fullSyncSec = getSettingMgr("dbSyncSec");
+if(!file_exists("/tmp/mdb.status")){
+	syslog(LOG_WARNING, "managerTasks cannot do work- manager.db has not been rehydrated");
+}else{
+	$jobPollSec = intval(getSettingMgr("jobPollSec"));
+	$fullSyncSec = intval(getSettingMgr("dbSyncSec"));
 
-if(empty($jobPollSec)){
-	$jobPollSec = 5;
-	setSettingMgr("jobPollSec", 5);
-}
-if(empty($fullSyncSec)){
-	$fullSyncSec = 30;
-	setSettingMgr("dbSyncSec", 30);
+	if(empty($jobPollSec)){
+		$jobPollSec = 5;
+		setSettingMgr("jobPollSec", 5);
+	}
+	if(empty($fullSyncSec)){
+		$fullSyncSec = 30;
+		setSettingMgr("dbSyncSec", 30);
+	}
 }
 
 $i=0;
 while(true){
-	if($i % 300 == 0){
-		$jobPollSec = getSettingMgr("jobPollSec");
-		$fullSyncSec = getSettingMgr("dbSyncSec");
-		syncSub();
-	}
-	if($i % 3600 == 0){
-		try{
-			getGraphStats();
-                }catch(Exception $ex){
-                        addAlarmMgr("Failed to getGraphStats.  Error: ". $ex->getMessage());
-                }
-	}
-	
-	if($i % $fullSyncSec == 0){
-		syncAllA3s();
-	}else if($i % $jobPollSec ==0){
-		syncAllJobs();
-		try{
-			syncAlerts();
-                }catch(Exception $ex){
-                        addAlarmMgr("Failed to syncAlerts.  Error: ". $ex->getMessage());
-                }
+	if(file_exists("/tmp/mdb.status")){
+		if($i % 300 == 0){
+			$jobPollSec = getSettingMgr("jobPollSec");
+			$fullSyncSec = getSettingMgr("dbSyncSec");
+			syncSub();
+		}
+		if($i % 3600 == 0){
+			try{
+				getGraphStats();
+			}catch(Exception $ex){
+				addAlarmMgr("Failed to getGraphStats.  Error: ". $ex->getMessage());
+			}
+		}
+		
+		if($i % $fullSyncSec == 0){
+			syncAllA3s();
+		}else if($i % $jobPollSec ==0){
+			syncAllJobs();
+			try{
+				syncAlerts();
+			}catch(Exception $ex){
+				addAlarmMgr("Failed to syncAlerts.  Error: ". $ex->getMessage());
+			}
+		}
 	}
 	
 	sleep(1);
