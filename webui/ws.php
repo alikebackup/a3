@@ -19,36 +19,39 @@ $thePage = $_SERVER['PHP_SELF'];
 $appBase =  $_SERVER['DOCUMENT_ROOT'] . '/';
 $thePage = ltrim($thePage,"/");
 
-if(isset($_REQUEST['req'])){ 
-	if($_REQUEST['req'] == "api"){
-		$apiReal = getSettingMgr("apiKey");
-		$apiReal = empty($apiReal) ? 'API' : $apiReal;
-		$apiKey = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-		if($apiKey == ''){ 
-			echo json_encode(["message" => "No api key provided"]);
-			exit();
-		}
-		if ($apiKey !== $apiReal) {
-			http_response_code(401);
-			echo json_encode(["message" => "Unauthorized"]);
-			exit();
-		}
-
-		array_shift($_REQUEST);
-		$keys = array_keys($_REQUEST);
-		if(count($keys) ==0){
-			echo json_encode(["message" => "No method given"]);
-			exit();
-		}
-		$call = $keys[0];
-		array_shift($_REQUEST);
-		$res = processClientApi($call, $_REQUEST);
-		echo json_encode($res);
-
-		exit();
-	}
+if(!isset($_REQUEST['site']) && !isset($_REQUEST['api'])){ 
+	returnError("No site provided"); 
 }
 
+if(isset($_REQUEST['api'])){ 
+	$keys = explode('/', $_REQUEST['api']);
+	$apiReal = getSettingMgr("apiKey");
+	$apiReal = empty($apiReal) ? 'API' : $apiReal;
+	$apiKey = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+	if($apiKey == ''){ 
+		echo json_encode(["message" => "No api key provided"]);
+		exit();
+	}
+	if ($apiKey !== $apiReal) {
+		http_response_code(401);
+		echo json_encode(["message" => "Unauthorized"]);
+		exit();
+	}
+
+	if(count($keys) ==0){
+		echo json_encode(["message" => "No method given"]);
+		exit();
+	}
+	$call = $keys[0];
+	array_shift($_REQUEST);
+	$res = processClientApi($call, $_REQUEST);
+	echo json_encode($res);
+
+	exit();
+}
+
+$site = $_REQUEST['site'];
+$keys = explode('/', $_REQUEST['req']);
 session_start();
 
 
@@ -56,13 +59,6 @@ session_start();
 $isLoggedIn=false;
 $userid=0;
 
-
-if(!isset($_REQUEST['req'])){ returnError("No site provided"); }
-$site = $_REQUEST['req'];
-array_shift($_REQUEST);
-
-// now we just have the keys
-$keys = array_keys($_REQUEST);
 if(count($keys) ==0){
 	returnError("Site: $site.  No method provided");
 	exit();
@@ -72,7 +68,6 @@ $verb = null;
 if(count($keys) >1){
 	$verb = $keys[1];
 }
-//echo "Site: $site, Req: $req, Verb: $verb";
 
 if($req == "logout"){
 	session_destroy();

@@ -35,42 +35,66 @@ function doCpuTick(){
 	file_put_contents($fn, $total);
 }
 
-function doNetTick(&$stats, &$backupStats){
+function doNetTick(&$stats, &$backupStats) {
+	$nics = array_filter(scandir('/sys/class/net'), function($if) {
+		return $if !== '.' && $if !== '..' && $if !== 'lo';
+	});
 
-	$int = "eth0";
-	$rx = "/sys/class/net/$int/statistics/rx_bytes";
-	$tx = "/sys/class/net/$int/statistics/tx_bytes";
+	$net = new stdClass();
+	$net->rx = 0;
+	$net->tx = 0;
 
-	if(file_exists($rx)){
-		$net = new stdClass();
-		$net->rx = trim(file_get_contents($rx));
-		$net->tx = trim(file_get_contents($tx));
+	$back = new stdClass();
+	$back->rx = 0;
+	$back->tx = 0;
 
-		$back = new stdClass();
-		if(file_exists("/tmp/metrics/0_down.bandwidth") ){
-			$back->rx = trim(fgets(fopen("/tmp/metrics/0_up.bandwidth", 'r')));
-			$back->tx = trim(fgets(fopen("/tmp/metrics/0_down.bandwidth", 'r')));
-		}else{
-			$back->tx=0;
-			$back->rx=0;
+	foreach ($nics as $int) {
+		$rx = "/sys/class/net/$int/statistics/rx_bytes";
+		$tx = "/sys/class/net/$int/statistics/tx_bytes";
+
+		if (file_exists($rx) && file_exists($tx)) {
+			$net->rx += (int)trim(file_get_contents($rx));
+			$net->tx += (int)trim(file_get_contents($tx));
 		}
-		sleep(1);
-
-		$net->rx = trim(file_get_contents($rx))  - $net->rx;
-		$net->tx = trim(file_get_contents($tx))  - $net->tx;
-
-		array_push($stats, $net);
-		array_shift($stats);
-		$j = json_encode($stats);
-		@file_put_contents($GLOBALS["netLog"], $j);
-
-		// now for the backups
-		array_push($backupStats, $back);
-		array_shift($backupStats);
-		$j = json_encode($backupStats);
-		@file_put_contents($GLOBALS["netLogBak"], $j);
 	}
+
+	if (file_exists("/tmp/metrics/0_down.bandwidth")) {
+		$back->rx = (int)trim(file_get_contents("/tmp/metrics/0_up.bandwidth"));
+		$back->tx = (int)trim(file_get_contents("/tmp/metrics/0_down.bandwidth"));
+	}
+
+	// Sleep for 1 second
+	sleep(1);
+
+	$new_net = new stdClass();
+	$new_net->rx = 0;
+	$new_net->tx = 0;
+
+	foreach ($nics as $int) {
+		$rx = "/sys/class/net/$int/statistics/rx_bytes";
+		$tx = "/sys/class/net/$int/statistics/tx_bytes";
+
+		if (file_exists($rx) && file_exists($tx)) {
+			$new_net->rx += (int)trim(file_get_contents($rx));
+			$new_net->tx += (int)trim(file_get_contents($tx));
+		}
+	}
+
+	$net->rx = $new_net->rx - $net->rx;
+	$net->tx = $new_net->tx - $net->tx;
+
+	array_push($stats, $net);
+	array_shift($stats);
+	$j = json_encode($stats);
+	@file_put_contents($GLOBALS["netLog"], $j);
+
+	// now for the backups
+	array_push($backupStats, $back);
+	array_shift($backupStats);
+	$j = json_encode($backupStats);
+	@file_put_contents($GLOBALS["netLogBak"], $j);
 }
+
 function setupNet(){
 	$netStats = array();
 	$dummy = new stdClass();
