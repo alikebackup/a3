@@ -239,8 +239,9 @@ function abdMountADS($ip){
 		$adsUser = getSetting("dataStoreUser");
 		if(empty($adsPass)){ $adsPass = "ads"; }
 		if(empty($adsUser)){ $adsUser = "ads"; }
-		$cmd = "/bin/mount -t cifs $share /mnt/ADS -o vers=3.0,username=$adsUser,password=$adsPass,cache=none";
+		$cmd = "/bin/mount -t cifs $share /mnt/ADS -o vers=3.0,username=$adsUser,password=$adsPass,cache=none 2>&1";
 		$res = runAbdCmd($ip, $cmd);
+		gen_log(LOG_DEBUG, "Mounted ADS with result: $res");
 	}
 	$cmd = "[ -e /mnt/ADS/seed ] && echo 1 || echo 0";
 	$res = runAbdCmd($ip, $cmd);

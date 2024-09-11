@@ -92,6 +92,7 @@ function setStaticIP($err=0){
 
 function getCurrentDS($type){
 	$ads = new stdClass();
+	$ads->type =0;	// 0 = network, 1=s3, 2=local
 
 	$t = "ads";
 	if($type == "ods"){ $t = "ods"; }
@@ -99,15 +100,19 @@ function getCurrentDS($type){
 	$cmd = "mount | grep $t | awk {'print $1'}";
 	$ads->path = str_replace('\040', " ", trim(shell_exec($cmd)) );
 	if(empty($ads->path)){
-		$ads->type = "Local Folder";
+		$ads->desc = "Local Folder";
 		$ads->path = "/mnt/ads";
 		$ads->free = trim(shell_exec("df -h /mnt/ads | grep -v Filesystem | awk {'print $4'}") );
+		$ads->type=2;
 		return $ads;
 	}
 
 	$cmd = "mount | grep $t | awk {'print $5'}";
-	$ads->type = strtoupper(trim(shell_exec($cmd)) );
-	if($ads->type == "FUSE"){ $ads->type = "S3 Compatible"; }
+	$ads->desc = strtoupper(trim(shell_exec($cmd)) );
+	if($ads->desc == "FUSE"){ 
+		$ads->desc = "S3 Compatible"; 
+		$ads->type=1;
+	}
 
 	return $ads;
 }

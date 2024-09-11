@@ -197,6 +197,8 @@ if ! systemctl is-enabled "a3.service" &>/dev/null; then
 	systemctl enable a3.service
 fi
 
+echo "/usr/local/sbin/blkfs /mnt/restore fuse nonempty,allow_other,sync_read,x-systemd.automount 0 0" >> /etc/fstab
+
 dpkg -i ../binaries/xapi-xe_1.249.3-2_amd64.deb
 
 if [[ -f "../appliance/alike_crontab" ]]; then

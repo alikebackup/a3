@@ -16,6 +16,8 @@ syncAllJobs();
 $pid = pcntl_fork();
 if($pid) { exit(0); }
 
+$jobPollSec = 30;
+$fullSyncSec = 300;
 
 if(!file_exists("/tmp/mdb.status")){
 	syslog(LOG_WARNING, "managerTasks cannot do work- manager.db has not been rehydrated");
@@ -37,8 +39,8 @@ $i=0;
 while(true){
 	if(file_exists("/tmp/mdb.status")){
 		if($i % 300 == 0){
-			$jobPollSec = getSettingMgr("jobPollSec");
-			$fullSyncSec = getSettingMgr("dbSyncSec");
+			$jobPollSec = intval(getSettingMgr("jobPollSec")) === 0 ? 30 : intval(getSettingMgr("jobPollSec"));
+			$fullSyncSec = intval(getSettingMgr("dbSyncSec")) === 0 ? 300 : intval(getSettingMgr("dbSyncSec"));
 			syncSub();
 		}
 		if($i % 3600 == 0){

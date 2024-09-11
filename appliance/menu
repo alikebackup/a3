@@ -500,17 +500,7 @@ function fixDB($dbFile){
 
 function configDS($dsType){
 
-	// check
-	if($dsType == "ads" && haveADS()){
-		echo "Existing ADS already found.  Do you want to change your ADS?\n";
-		$resp = getYN(true); 
-		if($resp != "y"){ return; }
-	}
-
 	$dsLabel = strtoupper($dsType);
-	$dsDesc = "Local Backups";
-	if($dsType == "ods"){ $dsDesc = "Offsite Backups"; }
-
 	if(getSvcStatus() ){
 		echo "\033[1;33mAlike is Running! \033[0m \n";
 		echo "Please stop Alike before adding or changing your $dsLabel\n\n";
@@ -518,29 +508,39 @@ function configDS($dsType){
 		return;
 	}
 	$cur = getCurrentDS($dsType);
-	try{
-		$good = ["0","1","2","3","x"];
-		if ($cur->path != ""){
-			echo "\033[1;32mCurrent $dsLabel:\033[0m";
-			echo "\nType: \033[1;33m".$cur->type ."\033[0m \n";
-			echo "Path: \033[1;33m". $cur->path ."\033[0m \n";
-			echo "\nChange $dsLabel ($dsType):\n";
-			$good = ["0","1","2","3","4","x"];
-		}else{
-			echo "\033[1;33mNo $dsLabel Defined \033[0m \n";
-			echo "\nDefine $dsLabel ($dsDesc):\n";
+	if ($cur->path != ""){
+		echo "\033[1;32mCurrent $dsLabel:\033[0m";
+		echo "\nType: \033[1;33m".$cur->desc ."\033[0m \n";
+		echo "Path: \033[1;33m". $cur->path ."\033[0m \n";
+	}
+
+	// check
+	if($dsType == "ads" && haveADS()){
+		echo "Existing ADS already found.  \nYou must Forget/Detach your ADS before you add a new one.\nDo you want to forget ADS now?\n";
+		$resp = getYN(true); 
+		if($resp != "y"){ return; }
+		if($cur->type == 2){
+			echo "Current ADS is local.  \nLocally defined DataStores must be handled manually.\n\nPlease manually unmount or remove existing ADS before coninuing.\n";
+			readline("Press any key to continue.");
+			return;
 		}
+		forgetDS($dsType);
+	}
+
+	$dsDesc = "Local Backups";
+	if($dsType == "ods"){ $dsDesc = "Offsite Backups"; }
+
+	try{
+		$good = ["0","1","2","3"];
+		echo "\nDefine $dsLabel ($dsDesc):\n";
 		echo opt(1)." Use NFS\n";
 		echo opt(2)." Use CIFS (SMB)\n";
-		if($dsType == "ads"){
-			echo opt(3)." Use Local Disk $dsLabel\n";
-		}else{
-	                echo opt(3)." Use S3 (or S3-compatible)\n";
-		}
 		if ($cur->path != ""){
-			$free = trim(shell_exec("df -h /mnt/ads | grep -v Filesystem | awk {'print $4'}"));
-			echo opt(4)." Create $dsType at path (/mnt/ads) [$free Free] (Manual Storage Mount)\n";
-			echo opt('x') . " Forget/Detach $dsLabel\n";
+			$free = trim(shell_exec("df -h /mnt/$dsType | grep -v Filesystem | awk {'print $4'}"));
+			echo opt(3)." Create $dsType at path (/mnt/ads) [$free Free] (Manual Storage Mount)\n";
+		}
+		if($dsType == "ods"){
+	                echo opt(4)." Use S3 (or S3-compatible)\n";
 		}
 
 		echo opt(0)." Return to main menu\n";
@@ -555,13 +555,13 @@ function configDS($dsType){
 			setupNFS($dsType);
 		}else if($resp == "2"){
 			setupCIFS($dsType);
-		}else if($resp == "3"){
-			if($dsType == "ads"){
-				setupLocal($dsType);
-			}else{
-				setupS3($dsType);
-			}
 		}else if($resp == "4"){
+			if($dsType == "ods"){
+				setupS3($dsType);
+			}else{
+				echo "S3 Not supported for local backups (vaults only)\n";
+			}
+		}else if($resp == "3"){
 			if(haveADS()){
 				echo "Existing ADS detected at path.  Please provide a blank mount for /mnt/ads\n";
 				readline( "Press any key to continue.\n");
@@ -575,8 +575,6 @@ function configDS($dsType){
 			$resp = getYN(false);
 			if(!$resp){ return configDS($dsType); }
 
-		}else if($resp == "x"){
-			return forgetDS($dsType);
 		}
 
 		handleNewDS($dsType);
