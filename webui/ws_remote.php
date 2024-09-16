@@ -153,6 +153,9 @@ try{
 
 function proccessRequest($req, $verb, $j){
 	switch($req){
+		case "testEmail":
+			return doTestEmail();
+			break;
 		case "jobgraph":
 			return getJobGraph();
 			break;

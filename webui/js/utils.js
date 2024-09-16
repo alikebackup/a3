@@ -1133,7 +1133,7 @@ function printToggleSite(name, text, checked, site, style=null){
 	var ck = "";
 	var cls = "";
 	var special = "";
-	if(checked == 1 || checked == true){ ck = "checked"; }	
+	if(checked == 1 || checked == true || checked == "on"){ ck = "checked"; }	
 	if(style != null){ 
 		cls = style; 
 		if(cls.includes('danger')){ special = cls; }	 // these have to go on the div, not the input

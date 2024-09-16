@@ -4499,6 +4499,9 @@ function drawSettings(data) {
         setupPage(" <a href='#' class='go_settings'>Settings</a>", "Settings");
         $("#dataTableDiv").append("<div id='dataTable' class='p-3'></div>");
 
+	let smtpPortTip = printTip('Choose the SMTP port for your server.  25 for standard SMTP, 465 for submission/TLS, and 587 for submission/StartTLS');
+	let emailTip = printTip('Enable SMTP notifications');
+
 	let manageIPtip = printTip('The IP remote agents and A3 nodes will use to connect to this system.');
 	let sessTip =printTip('Timeout in seconds for web sessions.');
 	let webSockTip = printTip('Timeout in seconds for all webservice connetion attempts. <br> May need to be increased for high latency environments.');
@@ -4506,7 +4509,7 @@ function drawSettings(data) {
 	let dbSyncTip = printTip('Similar to job polling, but effects the display of new and changed systems in the UI.  <br>Only change this if directed.');
 	let maxOnTip = printTip('The default backup retention for all backups. <br>Can be overridden for each system, or by using GFS on the backup job.');
 	let maxOffTip = printTip('The default vault retention for all vaulted systems. <br>Can be overridden for each system, or by using GFS on the backup job.');
-	let emailTip =printTip('If enabled, this email will recieve alerts and job notifications');
+	let emailRecTip =printTip('If enabled, this email will recieve alerts and job notifications');
 
 	let strictTip =printTip('When enabled, only daily backups are eligable for promotion.');
 	let apiKeyTip =printTip('Authentication key for client API Access.');
@@ -4558,11 +4561,6 @@ function drawSettings(data) {
 		</td><td> <input id='numVersions' type='number' class='form-control mgr-setting' placeholder='<default value>' ></td></tr>
 		<tr><td><b>Default Vaults per System:</b> ${maxOffTip}
 		</td><td> <input id='numVersionsOffsite' type='number' class='form-control mgr-setting' placeholder='<default value>' ></td></tr>
-
-		<!-- <tr><td><b>Email Alert Recipient:</b> ${emailTip}
-		</td><td> <input id='smtpToAddress' type='text' class='form-control mgr-setting' placeholder='<user@account.com>' ></td></tr>-->
-
-
 		<tr><td><b>Allow loose cache matching:</b> ${looseCacheTip}
 		</td><td> ${printToggle("allowFuzzyHCA","", sets.allowFuzzyHCA, "mgr-setting") }</td></tr>
 		</table>
@@ -4647,13 +4645,48 @@ function drawSettings(data) {
 	</td></tr>
 
         </table>
-        </div> </div> </div>
+        </div> </div> 
+
+                <div class="card card-info shadow"> <div class="card-header"><h3 class="card-title">Notification Settings</h3> </div>
+                <div class="card-body">
+                <table width="100%">
+                <tr><td><b>Enable Email:</b> ${emailTip}
+                </td><td> ${printToggle("smtpNotify","", sets.smtpNotify, "mgr-setting auto-setting") }</td></tr>
+
+                <tr><td><b>SMTP Server:</b> 
+                </td><td> <input id='smtpServer' type='text' class='form-control mgr-setting auto-setting' placeholder='<IP/Name of SMTP Server>' ></td></tr>
+                <tr><td><b>SMTP Port:</b> ${smtpPortTip}
+                </td><td> <input id='smtpPort' type='number' class='form-control mgr-setting auto-setting' placeholder='<25,465,587>' ></td></tr>
+                <tr><td><b>SMTP Username:</b> 
+                </td><td> <input id='smtpUsername' type='text' class='form-control mgr-setting auto-setting' placeholder='<Login for SMTP>' ></td></tr>
+                <tr><td><b>SMTP Password:</b> 
+                </td><td> <input id='smtpPassword' type='password' class='form-control mgr-setting auto-setting' placeholder='<Password for SMTP>' ></td></tr>
+
+                <tr><td><b>Email Alert Recipient:</b> ${emailRecTip}
+                </td><td> <input id='smtpToAddress' type='text' class='form-control mgr-setting auto-setting' placeholder='<user@account.com>' ></td></tr>
+
+                <tr><td><b>Enable TLS:</b> 
+                </td><td> ${printToggle("useSMTPSSL","", sets.useSMTPSSL, "mgr-setting auto-setting") }</td></tr>
+
+	<tr><td colspan=4 align='right'>
+		<button class='btn btn-info btn-sm' id='testEmail'>Test Email</button> 
+	</td></tr>
+                </table>
+                </div> </div>
+	</div>
 
 	</div> <!-- end row -->
 	<div class='row justify-content-end'><button class='btn btn-success save-settings'>Save</button> </div>`;
 	
         $("#dataTable").append(row);
 	renderTips();
+
+	$("#smtpNotify").val(sets.smtpNotify);
+	$("#smtpServer").val(sets.smtpServer);
+	$("#smtpPort").val(sets.smtpPort);
+	$("#smtpUsername").val(sets.smtpUsername);
+	$("#smtpPassword").val(sets.smtpPassword);
+	$("#smtpToAddress").val(sets.smtpToAddress);
 
 	$("#sessionTimeout").val(sets.sessionTimeout);
 	$("#wsTimeout").val(sets.wsTimeout);
@@ -4732,15 +4765,20 @@ function populateGfsEdit(data){
 
 async function doSaveSettings(){
 	showLineLoad();
-	var settings ={};
-	var args = {};	// this can never be an array (duh)
+	var msettings ={};
+	var nsettings ={};
 	$.each($(".mgr-setting"), function(i,s){
-		settings[ $(this).attr("id") ]  =$(this).val();
+		msettings[ $(this).attr("id") ]  =$(this).val();
+	});
+	$.each($(".auto-setting"), function(i,s){
+		nsettings[ $(this).attr("id") ]  =$(this).val();
 	});
 	try{
-		args["settings"] = settings;
+		var args = {};	// this can never be an array (duh)
+		args["settings"] = msettings;
 		var res = await wsPromise("setting/saveAll", args, 0);	// settings gets them all, setting sets one or more
-		// do something w/ the alerts
+		args["settings"] = nsettings;
+		var res = await wsPromise("setting/saveAll", args, 1);	
 		doToast("Settings saves successfully", "Saved Settings", "success");
 	} catch (ex){
 		doToast(ex.message, "Failed to save settings", "warning");

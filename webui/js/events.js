@@ -566,12 +566,23 @@ $(document).on('click', '#enableOnsiteVaulter', function(){
 });
 
 
-$(document).on('click', '#smtpTest', function(){
-    if($('#smtpNotify').is(':checked')){
-        $('#modal-error').text("");
-        testEmail();
-    }
-});
+$(document).on('click', '#testEmail', function(evt) { doTestEmail($(evt.currentTarget)); });
+async function doTestEmail(guy){
+	if($('#smtpNotify').is(':checked')){
+		wsCall("testemail", null, "testEmailCallback", null, 1);
+
+		try{
+			    var args= new Object();
+			var res = await wsPromise("testEmail", args, 1);
+			doToast("It appears the message was sent.  Check the mail.log for details", "Send test email", "success");
+		} catch (ex){
+			doToast(ex.message, "Failed to send test email", "error");
+		}
+
+	}else{
+		doToast("Can't test email when Email is disabled :)", "Email is disabled- test skipped", "warning");
+	}
+}
 
 
 
@@ -1725,7 +1736,7 @@ $(document).on('change', '#a3-minilog-drop', function(){
 });
 
 $(document).on('focus', '.auto-setting', function(){
-	if ($(this).is('input[type="text"]')) {
+	if ($(this).is('input[type="text"]') || $(this).is('input[type="number"]') || $(this).is('input[type="password"]')) {
 		$(this).data("prev", $(this).val().trim() );
 	}
 });
@@ -1734,13 +1745,16 @@ $(document).on('change', '.auto-setting', function(){
         var site = $(this).data("site");
         var set = $(this).attr("id");
 
-	if ($(this).is('input[type="text"]')) {
+	if(!site){ site =1; }
+
+	if ($(this).is('input[type="text"]') || $(this).is('input[type="number"]') || $(this).is('input[type="password"]') ) {
 		if($(this).data("prev") == $(this).val().trim() ){ return; } // unchanged
 		if ($(this).val().trim() === '') {
 			$(this).val($(this).data("prev"));
 			return;
 		}
 		updateSetting(set, $(this).val().trim(), site);
+		if($(this).hasClass('mgr-setting')){ updateSetting(set, $(this).val().trim(), 0); }
 		if($(this).data("name") == "a3name"){
 			var args= new Object();
 			args["id"] = site;
@@ -1751,18 +1765,13 @@ $(document).on('change', '.auto-setting', function(){
 	}else if ($(this).is(':checkbox')) {
 		if($(this).is(':checked')){
 			updateSetting(set, true, site);
+			if($(this).hasClass('mgr-setting')){ updateSetting(set, true, 0); }
 		}else{
 			updateSetting(set, false, site);
+			if($(this).hasClass('mgr-setting')){ updateSetting(set, false, 0); }
 		}
 	}
 });
-$(document).on('change', '.test-email-toggler', function(){
-	if($(this).is(':checked')){
-		$("#test-email-pane").show();	
-	}else{
-		$("#test-email-pane").hide();	
-	}
-})
 $(document).on('click', '#send-test-email', function(){
         var site = $(this).data("site");
 	wsCall("testemail", null, "testEmailCallback", null, site);

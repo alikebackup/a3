@@ -6,6 +6,9 @@ include_once("/usr/local/sbin/insta_common");
 
 function processNimbusRequest($req, $verb, $j ){
         switch($req){
+                case "testEmail":
+                        return doTestEmail();
+                        break;
                 case "jobgraph":
                         return getJobGraph();
                         break;
@@ -139,7 +142,7 @@ function processNimbusRequest($req, $verb, $j ){
                         return updateSetting($j, $verb);
                         break;
 
-                case "testemail":
+                case "testemail2":
                         $res = sendTestEmail();
                         if($res->result == "error"){
                                 return returnResult(0, "Error sending mail: $res->message");
@@ -560,6 +563,18 @@ function getJavaStatus() {
 	return $java;
 }
 
+function doTestEmail(){
+        $r = array();
+	try{
+		testEmail();
+		$r["message"] = "Test email sent!";
+		$r["result"] = "success";
+	}catch(Exception $ex){
+		$r["message"] = $ex->getMessage();
+		$r["result"] = "error";
+	}
+	returnJSN($r);
+}
 
 function doAuth($d){
 	$out = checkAuth($d);

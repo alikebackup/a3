@@ -1442,6 +1442,7 @@ function saveAllSettings($s){
 	}
 	updateHostname();
 	syncDBs();
+	exec("/usr/local/sbin/emailUpdater");
 	if($tellJava){
 		$arg=array("command"=>"settings");
                 issueJavaCmd($arg, 0, 0,0);

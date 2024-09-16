@@ -707,6 +707,8 @@ function cullABDs($hostId){
 }
 
 function findVMsFromVdisOnHost($vdis, $h){
+	return null;
+
 	$top['host'] = $h->name;
 	$top['vms'] = array();
 	xen_connect($h->hostID);

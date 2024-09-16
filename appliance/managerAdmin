@@ -60,6 +60,20 @@ function doNimbusImport(){
 	$sess = getSetting("sessionTimeout");
 	setSettingMgr("sessionTimeout", $sess);
 
+	$stmp = getSetting("smtpNotify");
+	setSettingMgr("smtpNotify", $stmp);
+	$stmp = getSetting("smtpServer");
+	setSettingMgr("smtpServer", $stmp);
+	$stmp = getSetting("smtpPort");
+	setSettingMgr("smtpPort", $stmp);
+	$stmp = getSetting("smtpUsername");
+	setSettingMgr("smtpUsername", $stmp);
+	$stmp = getSetting("smtpPassword");
+	setSettingMgr("smtpPassword", $stmp);
+	$stmp = getSetting("smtpToAddress");
+	setSettingMgr("smtpToAddress", $stmp);
+
+
 	setSetting("welcomeShown", $welcome);
 	setSetting("managerIP", $ip);
 	setSettingMgr("managerIP", $ip);

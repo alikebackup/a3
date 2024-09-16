@@ -16,7 +16,7 @@ if(count($argv) > 2){
 }
 
 $smtp = getSetting("smtpNotify");
-if($smtp != "true"){
+if($smtp != "true" && $smtp != "1" && $smtp != "on"){
 	echo "SMTP is globally disabled (setting).  No email will be sent\n";
 	return;
 }
@@ -40,7 +40,7 @@ if ( $j->type == jobType::offsiteJob ){
 
 $send = false;
 if(array_key_exists("allowJobEmail",$j->Options)){
-	if($j->Options["allowJobEmail"] == 1){
+	if($j->Options["allowJobEmail"] >= 1){
 		$send =true;
 	}else{
 		echo "Job ($jobID) has email notifications disabled.  No emails will be sent.\n";
