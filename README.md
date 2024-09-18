@@ -19,9 +19,13 @@ Please use our bootable [ISO installer](https://github.com/alikebackup/a3/raw/ma
    - S3-compatible storage is only supported for the ODS (Offsite Vaults)
 
 
-## Appliance Changes ##
-This project is slightly different from the previous Alike / A3 product, which was delivered via an Alpine Linux virtual appliance that ran a debian Docker container that housed the Alike software.
-This project's goal is to eliminate the Docker layer, and move the Alike software back to running directly on a Debian OS.  The benefits of this are both performance and simplicity, which in turn makes a much easier system to manage.
+## Project Goals ##
+We want to simplify the Alike solution, and make it simple to configure an manage however you like.  Additionally, we hope to replace any functionality lost when the Quadric services were removed, such as email notifications, user management, etc.
+
+
+ - Undockered: The Alike software now runs directly on the Linux OS.
+ - AlikeSR (NFS SR)removed: This drastically reduces complexity, and greatly improves stability at the cost of the "InstaBoot" feature.
+ - Full (root) access to your appliance:  You can manage all aspects of the Alike system.
 
 
 ## Building from source ##
