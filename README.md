@@ -29,9 +29,9 @@ We want to simplify the Alike solution, and make it simple to configure an manag
 
 
 ## Building from source ##
-At present, this project has only been tested on Debian 12.x, but it will likely work on other (modern) Debian based systems. To create the new A3, you can use the Debian "preseed" process, by using the following URL as the script during an automated install. This will provide the base OS and all required packages for Alike to run.  After the installation completes, you will then be prompted to run a single command which will pull the latest build of the Alike software, and install it locally.
+At present, this project has only been tested on Debian 12.x, but it will likely work on other (modern) Debian based systems. To create the new A3, you can use the Debian "preseed" process, by using the URL  below, which will follow an automated install. This will provide the base OS and all required packages for Alike to run.  If you wish to install Alike on an existing system, you can skip the "preseed" install step, but please be sure to have all required packages installed.  
 ### Build Steps ###
-1. Boot your system with a Debian 12.x ISO.  Please be sure the sytem has at least 32GB of disk, and 2GB ram minimum.
+1. Boot your system with a Debian 12.x ISO.  Please be sure the sytem has at least 32GB of disk, and 2GB ram minimum. All disks will be overwritten during this process!
 Use the preseed config:
 
 	https://raw.githubusercontent.com/alikebackup/a3/main/build/a3.cfg
@@ -47,7 +47,7 @@ Use the preseed config:
 1. You may now start the Alike services (from the menu), and proceed to the Web UI
 
 # Final Thoughts #
-If you are looking for the final update to the A3 product line, you can find a preserved docker image and the required docker-compose.yml file below.  This is here for archive purposes only, and will not be supported in this project.
+If you are looking for the final update to the A3 product line, you can find a preserved docker image and the required [docker-compose.yml[(docker/docker-compose.yml) file in the docker folder.  This is here for archive purposes only, and will not be supported in this project.
 
 
 Lastly, a very big shout-out to the Quadric Software team for creating such a wonderful backup solution, and of course, for deciding to make it open source at the end.
