@@ -47,7 +47,7 @@ Use the preseed config:
 1. You may now start the Alike services (from the menu), and proceed to the Web UI
 
 # Final Thoughts #
-If you are looking for the final update to the A3 product line, you can find a preserved docker image and the required [docker-compose.yml[(docker/docker-compose.yml) file in the docker folder.  This is here for archive purposes only, and will not be supported in this project.
+If you are looking for the final update to the A3 product line, you can find a preserved docker image and the required [docker-compose.yml](docker/docker-compose.yml) file in the docker folder.  This is here for archive purposes only, and will not be supported in this project.
 
 
 Lastly, a very big shout-out to the Quadric Software team for creating such a wonderful backup solution, and of course, for deciding to make it open source at the end.
