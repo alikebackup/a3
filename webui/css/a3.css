@@ -59,7 +59,7 @@
 /*  Schedule Styles */
 .sched-select-container{
 	width: 100%;
-	background: transparent url('/images/ms-switch.png') no-repeat 50% 50%;
+//	background: transparent url('/images/ms-switch.png') no-repeat 50% 50%;
 }
 .sched-selector-base{
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -114,7 +114,7 @@
 	display:inline-block;
 }
 .sched-disk-collapse{
-	background: transparent url(/images/expand_up.png) no-repeat;
+//	background: transparent url(/images/expand_up.png) no-repeat;
 	width: 20px;
 	margin-left:5px;
 	display:inline-block;

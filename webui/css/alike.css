@@ -2150,7 +2150,7 @@ input[type=text], input[type=password]{
   }
   .vdt_up
   {
-	background:transparent url(/images/expand_up.png) no-repeat;
+//	background:transparent url(/images/expand_up.png) no-repeat;
 	width:24px;
 	color:#fff;
   }
