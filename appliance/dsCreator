@@ -33,6 +33,8 @@ function makeDS($type, $bsize){
 	$dsBase = "/mnt/ads";
 	if($type == "ods"){ $dsBase = "/mnt/ods"; }
 
+	syslog(6, "Creating new $type (at $dsBase)");
+
 	if(is_dir("$dsBase/blocks")){
 		throw new Exception("$type directory already exists ($dsBase/blocks)");
 	}
@@ -86,6 +88,7 @@ function makeDS($type, $bsize){
 			unlink("/mnt/ads/nods");
 		}
 
+		syslog(6, "Loading new ADS and creating manager.db");
 		loadADS();
 	}
 	exec("chown -R 1000:1000 $dsBase");
