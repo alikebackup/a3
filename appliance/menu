@@ -154,6 +154,7 @@ function doAdvanced(){
 	}
 	$ms = getModeStr($mode);
 	echo opt(3)." Run ABD Report\n";
+	echo opt(4)." Update to specific build/tag\n";
         echo opt(0)." Return to Main Menu\n";
 
 	$resp = getChoice();

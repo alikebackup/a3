@@ -21,7 +21,7 @@ function updateToTag($tag){
 	exec("git -C /root/a3 fetch --tags");
 	exec("git -C /root/a3 rev-parse --verify refs/tags/$tag", $out, $code);
 	if($code !== 0){
-		die("Tag ($tag) not found!\n");
+		die("Build (Tag) [$tag] not found!\n");
 	}
 	exec("git -C /root/a3 checkout tags/$tag", $out, $code);
 	if($code !== 0){
@@ -33,8 +33,11 @@ function updateToTag($tag){
 	}
 
 	updateAssets($tag);
-	echo "Update to #$tag complete.\nA restart is required for all updates to take effect\nReboot now? (y/n): ";
-	$resp = getYN(false);
+	echo "Update to #$tag complete.\nA restart is required for all updates to take effect\nReboot now? (y/n): ";	
+	$resp = trim(fgets(STDIN));
+	if (strcasecmp($resp, "y") == 0) { $resp = true; }
+	else{ $resp = false; }
+
 	if($resp){
 		exec("sudo reboot");
 		exit(0);

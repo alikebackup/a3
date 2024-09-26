@@ -89,8 +89,8 @@ function checkEnv(){
 			exec("umount /mnt/restore");			
 		}
 	}
-	exec("chown -R alike:alike $dir"); 
-	exec("chmod 777 $dir");
+	exec("chown -R alike:alike $dir 2> /dev/null"); 
+	exec("chmod 777 $dir 2> /dev/null");
 
 	$dir = $GLOBALS["jobPath"];
 	if(file_exists($dir)){
