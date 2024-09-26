@@ -4395,8 +4395,8 @@ function drawSupport(){
                         <div class='col-5'>
                                     <div class="small-box bg-success qs_support_link clickable" id='tech-support-box'>
                                       <div class="inner">
-                                        <h3>Support Desk</h3>
-                                        <p>Get help from our experienced support team</p>
+                                        <h3>Get Help</h3>
+                                        <p>Check Github for existing issues and fixes</p>
                                       </div>
                                       <div class="icon"> <i class="fas fa-life-ring"></i> </div>
                                         <a href="#" class="small-box-footer"> Open External <i class="fas fa-arrow-circle-right"></i> </a>

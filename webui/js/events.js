@@ -36,7 +36,7 @@ $(document).on('click', '.qs_preview_link', function(){ window.open("https://doc
 $(document).on('click', '.qs_portal_link', function(){ window.open("https://portal.alikebackup.com", "_blank"); });
 $(document).on('click', '.qs_kb_link', function(){ window.open("https://docs.alikebackup.com/kb-v3/", "_blank"); });
 $(document).on('click', '.qs_admin_guide_link', function(){ window.open("https://docs.alikebackup.com/admin/7.5/", "_blank"); });
-$(document).on('click', '.qs_support_link', function(){ window.open("https://portal.alikebackup.com/?page=support", "_blank"); });
+$(document).on('click', '.github_issues_link', function(){ window.open("https://github.com/alikebackup/a3/issues", "_blank"); });
 
 function modalScroll(){
 	if($("#detailModal").is(":visible")){

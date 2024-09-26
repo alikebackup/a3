@@ -234,7 +234,7 @@ if(isset($_COOKIE['hide-sidebar'])){
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quadric Software- A3 Manager</title>
+  <title>Alike Backup Manager</title>
 
 
 <link rel="stylesheet" href="/dist/fonts/gfont.css">
@@ -477,7 +477,7 @@ if(isset($_COOKIE['hide-sidebar'])){
               <li class="nav-item">
                 <a href="#" class="nav-link clickable go_help">
                   <i class="fas fa-life-ring nav-icon"></i>
-                  <p>Get Support</p>
+                  <p>Get Help</p>
                 </a>
               </li>
 
@@ -553,7 +553,7 @@ if(isset($_COOKIE['hide-sidebar'])){
 		<i class="far fa-moon fa-lg"></i>	
 	</span>
     </div>
-    <strong>Copyright &copy; 2009-<?php echo date('Y'); ?> <a href="https://www.alikebackup.com" target="_new">Quadric Software, Inc.</a></strong> All rights reserved.
+    <strong>Copyright &copy; 2009-<?php echo date('Y'); ?> <a href="https://www.alikebackup.com" target="_new">Quadric Software, Inc.</a></strong>.
   </footer>
 
   <!-- Control Sidebar -->

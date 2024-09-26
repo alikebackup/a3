@@ -1779,7 +1779,7 @@ function verifyAndEnableRangeTracking($ip, $driveLet) {
 	$cmd = "fsutil usn enablerangetracking c=1048576 s=1048576 $driveLet";
         $rez = agentRunCmd($ip, $cmd);
 	if(hasRangeTracking($ip, $driveLet) == false) {	
-                gen_log(LOG_INFO, "Drive $driveLet does not support write range tracking. Please see Quadric Software KB for information on write range tracking.");
+                gen_log(LOG_INFO, "Drive $driveLet does not support write range tracking. Please see KB for information on write range tracking.");
         }
 }
 
