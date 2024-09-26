@@ -167,7 +167,7 @@ function doAdvanced(){
 		}else if ($resp == "3"){
 			return doAbdReport();
 		}else if ($resp == "4"){
-			return doModeChange();
+			return updateToTag();
 		}else if ($resp == "5"){
 			return doTokenReset();
 		}else if ($resp == "0"){
@@ -179,6 +179,26 @@ function doAdvanced(){
 		}
         }
 }
+
+function updateToTag(){
+	$bld = getCurrentBuild();
+	echo "\nCurrent Build: $bld\n";
+	echo "Please enter desired build# (or 0 to return)\n";
+	echo "Build: ";
+	$resp = "start";
+	while(!is_numeric($resp ) ){
+		$resp = trim(fgets(STDIN));
+		if($resp ==0){ return doAdvanced(); }
+		else if($resp <= 7){ 
+			echo "Please enter a valid build number: ";
+			$resp = "nope";
+		}
+	}
+	echo "Ok, they want to upgrade to: $resp\n";
+	echo shell_exec("sudo /usr/local/sbin/a3_update $resp");
+	readline("Press any key to continue.");
+}
+
 function doTokenReset(){
         echo "\nRegenerate the Manager Token?\n";
 	echo "\nYou will need to enter the new token in your Manager UI\n";

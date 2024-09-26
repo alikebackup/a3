@@ -49,9 +49,9 @@ function updateAssets($tag){
 		exec("crontab -u alike $base/appliance/alike_crontab");
 		unlink("$base/appliance/alike_crontab");
 	}
-	exec("cp -f $base/configs/rsyslog.conf /etc/");
-	exec("cp -f $base/hooks/* /home/alike/Alike/hooks/");
-	exec("mv -f $base/binaries/BackupScheduler.exe /home/alike/Alike/");
+	exec("cp -f $base/configs/rsyslog.conf /etc/ 2>/dev/null");
+	exec("cp -f $base/hooks/* /home/alike/Alike/hooks/ 2>/dev/null");
+	exec("mv -f $base/binaries/BackupScheduler.exe /home/alike/Alike/ 2>/dev/null");
 	exec("cp -f $base/appliance/* /usr/local/sbin/");
 	exec("cp -f $base/binaries/*.dll /usr/local/sbin/");
 	exec("cp -f $base/binaries/*.exe /usr/local/sbin/");
@@ -61,7 +61,7 @@ function updateAssets($tag){
 
 	exec("chown -R alike:alike /home/alike");
 	exec("chmod 755 /usr/local/sbin/*");
-	exec("chmod 755 /home/alike/Alike/hooks/*");
+	exec("chmod 755 /home/alike/Alike/hooks/* 2>/dev/null");
 
 
 	file_put_contents("/home/alike/Alike/build.num", $tag);
