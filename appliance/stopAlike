@@ -26,9 +26,9 @@ try{
 		disownABDs(0);
 	}
 
-	if(stopBKS()==false ){  }
-	if(stopJava() == false){ $res=1; }
-	if(stopFUSE()== false){ $res=1; }
+	stopBKS();
+	stopJava();
+	stopFUSE();
 	if($doWS){
 		if(stopWS()==false ){ $res=1; }
 	}
@@ -44,6 +44,7 @@ try{
 
 function stopFUSE(){
         echo "Unmounting Virtual Restore Share\n";
+		exec("sudo umount -l /mnt/restore >/dev/null 2>&1");
         exec("sudo killall blkfs >/dev/null 2>&1");
 	return true;
 }

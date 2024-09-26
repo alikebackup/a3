@@ -570,7 +570,7 @@ function configDS($dsType){
 			$free = trim(shell_exec("df -h /mnt/ads | grep -v Filesystem | awk {'print $4'}"));
 			echo "This will create a blank new ADS in the path: /mnt/ads [$free Free].\n";
 			echo "It is assumed you have already mounted backup storage to this path!\n";
-			echo "\033[1;33mAlike is Running! \033[0mIf any data exists in the /mnt/ads location, it will be lost.\033[0m \n\n";
+			echo "\033[1;33m If any data exists in the /mnt/ads location, it will be lost.\033[0m \n\n";
 			echo "Are you sure? (y/N): ";
 			$resp = getYN(false);
 			if(!$resp){ return configDS($dsType); }

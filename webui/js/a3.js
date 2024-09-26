@@ -335,7 +335,7 @@ function drawA3Details(data, a3id) {
 		<td> Services </span> </td>
 		<td> <span class='badge ${javaStat}'> Engine </span> </td>
 		<td> <span class='badge ${blkfsStat}'>  RestoreFS </span> </td>
-		<td> <span class='badge badge-secondary'> AlikeSR </span> </td>
+		
 		</tr>`;
 
 	// engine status
@@ -2497,7 +2497,7 @@ function drawDashStatus(data){
 		p += `<td> Services </td>
 		<td> <span class='badge ${javaStat}' data-toggle='tooltip' title='Responsible for Backup & Restore data processing'> Engine </span> </td>
 		<td> <span class='badge ${blkfsStat}' data-toggle='tooltip' title='Creates virtual files, folders, and disks for restores'>  RestoreFS </span> </td>
-		<td> <span class='badge ${instafsStat}' data-toggle='tooltip' title='Used for ABDs and InstaBoot restores'> AlikeSR </span> </td>
+		
 		</tr>`;
 	}
 	p +=`	<tr>
@@ -3766,7 +3766,8 @@ function populateA3Instaboots(data, site){
 	panelBody += prettySize(data.SR.free) +"</td></tr>";
 	panelBody += "<tr><td><span id='used-tag-"+site+"'>A3 Used</span></td><td>"+prettySize(data.SR.used)+"</td></tr>";
 	panelBody += "<tr><td><span id='other-tag-"+site+"'>Other Used</span></td><td>"+ prettySize((data.SR.total - data.SR.free) - data.SR.used)+"</td></tr>";
-
+
+
 	stuff += "<div class='col-2'>";
 	stuff += printPanel("Instaboot & SR Usage", panelBody, "card-secondary")
 	stuff += "</div>";
