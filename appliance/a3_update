@@ -66,6 +66,11 @@ function updateAssets($tag){
 	exec("chmod 755 /usr/local/sbin/*");
 	exec("chmod 755 /home/alike/Alike/hooks/* 2>/dev/null");
 
+	if (!file_exists("/usr/local/sbin/goofys")){
+		exec("sudo wget https://github.com/kahing/goofys/releases/download/v0.24.0/goofys -O /usr/local/sbin/goofys");
+		exec("sudo chmod 755 /usr/local/sbin/goofys");
+	}
+
 
 	file_put_contents("/home/alike/Alike/build.num", $tag);
 

@@ -91,30 +91,34 @@ function setStaticIP($err=0){
 }
 
 function getCurrentDS($type){
-	$ads = new stdClass();
-	$ads->type =0;	// 0 = network, 1=s3, 2=local
+        $ds = new stdClass();
+        $ds->path = "";
+        if($type == "ods"){
+                if(!haveODS()){ return $ds; }
+        }else{
+                if(!haveADS()){ return $ds; }
+        }
+        $ds->path = "/mnt/$type";
+        $ds->type =0;   // 0 = network, 1=s3, 2=local
 
-	$t = "ads";
-	if($type == "ods"){ $t = "ods"; }
 
-	$cmd = "mount | grep $t | awk {'print $1'}";
-	$ads->path = str_replace('\040', " ", trim(shell_exec($cmd)) );
-	if(empty($ads->path)){
-		$ads->desc = "Local Folder";
-		$ads->path = "/mnt/ads";
-		$ads->free = trim(shell_exec("df -h /mnt/ads | grep -v Filesystem | awk {'print $4'}") );
-		$ads->type=2;
-		return $ads;
-	}
+        $cmd = "mount | grep $type | awk {'print $1'}";
+        $ds->path = str_replace('\040', " ", trim(shell_exec($cmd)) );
+        if(empty($ds->path)){
+                $ds->desc = "Local Folder";
+                $ds->free = trim(shell_exec("df -h /mnt/$type | grep -v Filesystem | awk {'print $4'}") );
+                $ds->type=2;
+                return $ds;
+        }
 
-	$cmd = "mount | grep $t | awk {'print $5'}";
-	$ads->desc = strtoupper(trim(shell_exec($cmd)) );
-	if($ads->desc == "FUSE"){ 
-		$ads->desc = "S3 Compatible"; 
-		$ads->type=1;
-	}
+        $cmd = "mount | grep $type | awk {'print $5'}";
+        $ds->desc = strtoupper(trim(shell_exec($cmd)) );
+        if($ds->desc == "FUSE"){
+                $ds->desc = "S3 Compatible";
+                $ds->type=1;
+        }
 
-	return $ads;
+        return $ds;
 }
 
 function getSvcStatus(){

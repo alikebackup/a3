@@ -195,7 +195,7 @@ function updateToTag(){
 			$resp = "nope";
 		}
 	}
-	echo "Ok, they want to upgrade to: $resp\n";
+	echo "Upgrading to to: $resp\n";
 	echo shell_exec("sudo /usr/local/sbin/a3_update $resp");
 	readline("Press any key to continue.");
 }
@@ -561,7 +561,8 @@ function configDS($dsType){
 			echo opt(3)." Create $dsType at path (/mnt/ads) [$free Free] (Manual Storage Mount)\n";
 		}
 		if($dsType == "ods"){
-	                echo opt(4)." Use S3 (or S3-compatible)\n";
+				$good = ["0","1","2","3","4"];
+	            echo opt(4)." Use S3 (or S3-compatible)\n";
 		}
 
 		echo opt(0)." Return to main menu\n";
@@ -895,7 +896,7 @@ function setupS3($type){
         $key = getEntry();
         echo "Please enter your Secret Key:\n";
         $secret = getEntry();
-
+		exec("sudo mkdir -p /root/.aws");
         run("sudo /usr/local/sbin/mount-s3.sh $bucket $ep $key \"$secret\" ");
         readline("Press any key to continue.");
 }

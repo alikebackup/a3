@@ -162,7 +162,7 @@ touch /mnt/ods1/nods
 
 echo $TAG > /home/alike/Alike/build.num
 
-if [[ -f "/usr/local/sbin/goofys" ]]; then
+if [[ ! -f "/usr/local/sbin/goofys" ]]; then
 	wget https://github.com/kahing/goofys/releases/download/v0.24.0/goofys -O /usr/local/sbin/goofys
 	chmod 755 /usr/local/sbin/goofys
 fi

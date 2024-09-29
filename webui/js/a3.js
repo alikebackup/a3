@@ -4393,7 +4393,7 @@ function drawSupport(){
                 <div class='row'>
                         <div class='col-3'></div>
                         <div class='col-5'>
-                                    <div class="small-box bg-success qs_support_link clickable" id='tech-support-box'>
+                                    <div class="small-box bg-success github_issues_link clickable" id='tech-support-box'>
                                       <div class="inner">
                                         <h3>Get Help</h3>
                                         <p>Check Github for existing issues and fixes</p>
