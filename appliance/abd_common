@@ -311,7 +311,7 @@ function provisionABD($poolID, $netID=null){
 
 	$res =preg_match("/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/", $newAbdUUID);
 	if($res !== 1){
-		throw new Exception("Failed to provision new ABD.  Please check that your Alike SR is plugged in and healthly.  Xen Error:  $newAbdUUID");
+		throw new Exception("Failed to provision new ABD from template.  Xen Error:  $newAbdUUID");
 	}
 
 

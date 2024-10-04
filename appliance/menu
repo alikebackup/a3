@@ -873,7 +873,7 @@ function setupNFS($type){
         }
         list($perm, $owner, $group) = explode(' ', $out[0]);
 
-        if (($perm != "755" && $perm != "777") ) {
+        if (($perm != "755" && $perm != "777" && $perm != "775") ) {
                 echo "The mounted NFS path does not have the expected permissions (755).";
 		echo "Found $perm $owner:$group\n";
                 echo "Please refer to the Alike KB article on configuring your NFS storage for Alike\n";
