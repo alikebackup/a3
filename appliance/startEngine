@@ -219,8 +219,8 @@ function startJava(){
                 usleep(500000);	// 500 ms
                 $i++;
         }
+		exec("service smbd start");
         echo "\nBackend Started\n";
-
 	return true;
 }
 
