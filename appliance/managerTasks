@@ -26,12 +26,12 @@ if(!file_exists("/tmp/mdb.status")){
 	$fullSyncSec = intval(getSettingMgr("dbSyncSec"));
 
 	if(empty($jobPollSec)){
-		$jobPollSec = 5;
-		setSettingMgr("jobPollSec", 5);
+		$jobPollSec = 1;
+		setSettingMgr("jobPollSec", $jobPollSec);
 	}
 	if(empty($fullSyncSec)){
 		$fullSyncSec = 30;
-		setSettingMgr("dbSyncSec", 30);
+		setSettingMgr("dbSyncSec", $fullSyncSec);
 	}
 }
 

@@ -442,12 +442,12 @@ if(isset($_COOKIE['hide-sidebar'])){
                   <p>ABDs (Xen)</p>
                 </a>
               </li>
-              <li class="nav-item">
+<!--              <li class="nav-item">
                 <a href="#" class="nav-link clickable go_insta">
                   <i class="fas fa-network-wired nav-icon"></i>
                   <p>InstaBoots (Xen)</p>
                 </a>
-              </li>
+              </li> -->
             </ul>
           </li>
 
