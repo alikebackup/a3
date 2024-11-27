@@ -81,14 +81,14 @@ function checkEnv(){
 	}
 	exec("chown alike:alike $dir"); 
 
-	$dir = "/mnt/restore";
-	if(!is_dir($dir)){ 
-		try{
-			if(!mkdir($dir)){ throw new Exception("Failed to create directory: $dir"); }
-		}catch(Exception $ex){
-			exec("umount /mnt/restore");			
-		}
-	}
+//	$dir = "/mnt/restore";
+//	if(!is_dir($dir)){ 
+//		try{
+//			if(!mkdir($dir)){ throw new Exception("Failed to create directory: $dir"); }
+//		}catch(Exception $ex){
+//			exec("umount /mnt/restore");			
+//		}
+//	}
 	exec("chown -R alike:alike $dir 2> /dev/null"); 
 	exec("chmod 777 $dir 2> /dev/null");
 
@@ -183,8 +183,8 @@ function startFUSE(){
 	$BLKFS_PATH="/mnt/restore";
 	
 	echo "Prepping restore mount...\n";
-        echo shell_exec("rm -fr $BLKFS_PATH");
-        echo shell_exec("mkdir $BLKFS_PATH");
+#        echo shell_exec("rm -fr $BLKFS_PATH");
+        echo shell_exec("mkdir -p $BLKFS_PATH");
 	echo "Mounting Alike virtual restore share\n";
 	echo shell_exec("$BIN_PATH/blkfs -oallow_other -osync_read $BLKFS_PATH");
 	return true;
