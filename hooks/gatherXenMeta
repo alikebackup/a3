@@ -168,7 +168,6 @@ function getXenPool(){
 	$p->nets = array();
 	foreach($guy as $g){
 		if($g["name-label"] == "Host internal management network"){
-//			echo "Skipping host internal\n";
 		}else{
 			$g["default"] = false;
 
@@ -189,7 +188,6 @@ function getXenPool(){
 	$p->srs = array();
 	foreach($srz as $s){
 		if($s["type"] == "iso" || $s["content-type"] == "iso"){
-//			echo "Skipping iso SR\n";
 		}else{
 			$sr = new stdClass();
 			$q = "sr-param-list uuid=".$s["uuid"]." params=host,virtual-allocation,physical-size,shared,physical-utilisation";
@@ -246,7 +244,7 @@ function getXenHosts($pool){
 		$h->freeMemory = $det["memory-free"];
 		$h->osName = $soft["product_brand"] ." ".$soft["product_version_text"];
 
-echo "Setting global host for pool $pool->uuid (from xapi): $h->name = $h->uuid\n";
+//echo "Setting global host for pool $pool->uuid (from xapi): $h->name = $h->uuid\n";
 		$GLOBALS["host-name"][$h->name] = $h->uuid;
 
 		array_push($poolHosts,$h);
