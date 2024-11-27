@@ -853,21 +853,21 @@ function setSharedSched(dat, a3id){
 	$("#schedule-name").val(dat.name);
 	$("#schedule-save").data("id", dat.ID);	// set schedID
 	$("#sched-freq").val(dat.scheduleType).trigger('change');	
-	if(dat.days.includes('0')){ $("#sun").prop('checked',true); }
-	if(dat.days.includes('1')){ $("#mon").prop('checked',true); }
-	if(dat.days.includes('2')){ $("#tue").prop('checked',true); }
-	if(dat.days.includes('3')){ $("#wed").prop('checked',true); }
-	if(dat.days.includes('4')){ $("#thu").prop('checked',true); }
-	if(dat.days.includes('5')){ $("#fri").prop('checked',true); }
-	if(dat.days.includes('6')){ $("#sat").prop('checked',true); }
+	if(dat.days.includes(0)){ $("#sun").prop('checked',true); }
+	if(dat.days.includes(1)){ $("#mon").prop('checked',true); }
+	if(dat.days.includes(2)){ $("#tue").prop('checked',true); }
+	if(dat.days.includes(3)){ $("#wed").prop('checked',true); }
+	if(dat.days.includes(4)){ $("#thu").prop('checked',true); }
+	if(dat.days.includes(5)){ $("#fri").prop('checked',true); }
+	if(dat.days.includes(6)){ $("#sat").prop('checked',true); }
 	if(dat.numConcurrent){ $("#numConcurrent").val(dat.numConcurrent) }
 	let emailLvl =0;
 	if(dat.Options.allowJobEmail){ emailLvl =dat.Options.allowJobEmail; }
 	$("#emailLevel").val(emailLvl).trigger('change');
-	$("#sched-hour").val(dat.runHour);
 	$("#sched-hour").val(new Date(dat.timestamp * 1000).getHours());
-	$("#sched-min").val(dat.runMin);	
+	$("#sched-hour").val(Number(dat.runHour));
 	$("#sched-min").val(new Date(dat.timestamp * 1000).getMinutes());
+	$("#sched-min").val(Number(dat.runMin));	
 	$("#sched-interval").val(dat.interval);	
 	$("#sched-monthday").val(new Date(dat.timestamp * 1000).getDate());
 }
