@@ -72,6 +72,7 @@ echo "Alike Service Startup complete.\n";
 echo "Listening for events.\n";
 echo "Starting job schedules\n";
 exec("echo 1 > /tmp/sched_svc_status");
+exec("chown alike /tmp/sched_svc_status");
 
 //set_time_limit(0);
 //register_shutdown_function('delayedRun');

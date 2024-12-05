@@ -32,6 +32,9 @@ try{
 	if($doWS){
 		if(stopWS()==false ){ $res=1; }
 	}
+
+	exec("echo 0 >  /tmp/sched_svc_status");
+
 	syslog(LOG_INFO,"Alike services stopped ($res)");
 
 	return $res;

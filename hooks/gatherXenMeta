@@ -168,6 +168,7 @@ function getXenPool(){
 	$p->nets = array();
 	foreach($guy as $g){
 		if($g["name-label"] == "Host internal management network"){
+//			echo "Skipping host internal\n";
 		}else{
 			$g["default"] = false;
 
@@ -188,6 +189,7 @@ function getXenPool(){
 	$p->srs = array();
 	foreach($srz as $s){
 		if($s["type"] == "iso" || $s["content-type"] == "iso"){
+//			echo "Skipping iso SR\n";
 		}else{
 			$sr = new stdClass();
 			$q = "sr-param-list uuid=".$s["uuid"]." params=host,virtual-allocation,physical-size,shared,physical-utilisation";
@@ -244,7 +246,7 @@ function getXenHosts($pool){
 		$h->freeMemory = $det["memory-free"];
 		$h->osName = $soft["product_brand"] ." ".$soft["product_version_text"];
 
-//echo "Setting global host for pool $pool->uuid (from xapi): $h->name = $h->uuid\n";
+echo "Setting global host for pool $pool->uuid (from xapi): $h->name = $h->uuid\n";
 		$GLOBALS["host-name"][$h->name] = $h->uuid;
 
 		array_push($poolHosts,$h);
@@ -423,8 +425,7 @@ function updateVMDB($vms, $poolID, $virtType){
 
 		foreach($vms as $vm){
 if(!isset($vm->uuid)){
-	echo "Skipping blank vm\n";
-	print_r($vm);
+	echo "Skipping blank vm with no uuid\n";
 	continue;
 }
 			// isHidden is the new virttype!
@@ -434,15 +435,16 @@ if(!isset($vm->uuid)){
 				$q =  "INSERT INTO tm_vmdisk (vmuuid, uuid,name,size,position) VALUES (?,?,?,?,?)";
 				dbSet("nimbus", $q, array( $vm->uuid, $v->vbd_uuid, $v->name_label, $v->size,$v->userdevice  ) );
 			}
-			if($needCleanup){
-				$q =  "SELECT * FROM VM where uuid=? and poolID=''";
-				$q =  "SELECT * FROM VM where uuid=?";
-				dbGetOne("nimbus", $q, array( $vm->uuid,) );
-				if(!empty($guy)){
+			//if($needCleanup){
+//			if($vm->poolID != $poolID){
+//				$q =  "SELECT * FROM VM where uuid=?";
+//				dbGetOne("nimbus", $q, array( $vm->uuid,) );
+//				if(!empty($guy)){
 					$q = "UPDATE VM set poolID=? WHERE uuid=?";
 					dbSet("nimbus", $q, array( $poolID, $vm->uuid,) );
-				}
-			}
+//					echo "Updating pool for VM $vm->name\n";
+//				}
+//			}
 		}
 	}catch(Exception $ex){
 		echo "Failure updating pool info in DB: ". $ex->getMessage();
