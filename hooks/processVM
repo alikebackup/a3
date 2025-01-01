@@ -94,13 +94,6 @@ function kickoffVault($vmid, $jid, $schedID ){
 	$j = getJob($jid);
 	if(!array_key_exists("vaultEnable",$j->Options) || $j->Options["vaultEnable"] !=1){  return; }
 
-	$edition = getEdition();
-
-	if($edition != 2){
-		gen_log(LOG_WARNING, "Skipping vault job due to licensing (not DR Edition)");
-		return;
-	}
-
 	$versid = "";
 	$sql = "SELECT vmversion from VM_Version where vmid=? and jobid=?";
 	$versid = dbGetColumn("nimbus", $sql, array($vmid, $jid) );

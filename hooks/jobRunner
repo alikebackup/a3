@@ -941,12 +941,6 @@ function spawnVaultJob($vmid, $version, $pid, $siteId){
 	}
 	startJob($j);
 	try{
-		$ed = getEdition();
-		if($ed < 2){
-			addJobLog("Offsite Vaulting requires Alike DR Edition. ($ed)", 1, $j->jobID, 0);
-			endJob($j->jobID, 7);
-			return;
-		}
 		if(isODSMountedReal() != true){
                         addJobLog("No Offsite Vault defined/mounted.  Please define your Offsite Storage on the A3 console before vaulting backups", 1, $j->jobID, 0);
                         endJob($j->jobID, 7);

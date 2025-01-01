@@ -2199,10 +2199,6 @@ function agentParseWmi($res){
 function doBackupVM($j, $vmid){
 
         $edition = getEdition();
-        if($edition ==3){
-                gen_log(LOG_ERR,"Skipping backup job.  A3 is in a read-only subscription.");
-                return;
-        }
 
         $uuid = getVMUuid($vmid);
         $vm = getVM($uuid);
@@ -2218,10 +2214,6 @@ function doBackupVM($j, $vmid){
 }
 function doReplicateVM($j, $vmid){
         $edition = getEdition();
-        if($edition !=2){
-                gen_log(LOG_ERR,"Skipping replicaion job.  Alike DR Edition is required but not present (Edition: $edition).");
-                return;
-        }
 
         $isQHB=false;
         if(array_key_exists("QHB", $j->Options) && $j->Options["QHB"] ==1 ){ $isQHB=true; }

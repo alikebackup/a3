@@ -1255,22 +1255,6 @@ function licenseCheckMgr($d){
 
 	$sub = getSubInfoMgr();
 
-	if($sub->edition == -1){
-		$r["status"] = "error";
-		$r["message"] = "No active plan found.  Read only mode enabled.";
-		return $r;
-	}
-
-	if($d->action == "replicate" || $d->action == "vault"){
-		if($sub->edition < 2){
-			$r["status"] = $p;
-			$r["message"] = "Alike DR Edition required";
-			return $r;
-		}
-		$r["status"] = "allowed";
-		$r["message"] = "Enjoy your $d->action";
-		return $r;
-	}
 
 	if(!empty($d->pool)){
 		try{
